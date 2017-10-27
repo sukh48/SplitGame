@@ -41,6 +41,7 @@ public class GameScreen extends ScreenAdapter
         engine.addSystem(new CollisionSystem());
         engine.addSystem(new AnimationSystem());
         engine.addSystem(new TweenSystem());
+        engine.addSystem(new DivideSystem(creator));
         engine.addSystem(new DestroyAnimationSystem());
 
         Entity player = creator.createPlayer();

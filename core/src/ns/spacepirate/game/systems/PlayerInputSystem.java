@@ -16,17 +16,24 @@ public class PlayerInputSystem extends IteratingSystem
     ComponentMapper<CPlayerInput> inputMap;
     ComponentMapper<CPosition> posMap;
     ComponentMapper<CVelocity> velMap;
-    ComponentMapper<CShoot> shootMap;
+    ComponentMapper<CDivideBall> divideBallMap;
     ComponentMapper<CTexture> texMap;
+
+    boolean initialTouch;
+    boolean touching;
+    float accel=1.5f;
 
     public PlayerInputSystem()
     {
-        super(Family.all(CPlayerInput.class, CPosition.class, CVelocity.class).get());
+        super(Family.all(CPlayerInput.class, CPosition.class, CVelocity.class, CDivideBall.class).get());
         inputMap = ComponentMapper.getFor(CPlayerInput.class);
         posMap = ComponentMapper.getFor(CPosition.class);
         velMap = ComponentMapper.getFor(CVelocity.class);
-        shootMap = ComponentMapper.getFor(CShoot.class);
+        divideBallMap = ComponentMapper.getFor(CDivideBall.class);
         texMap = ComponentMapper.getFor(CTexture.class);
+
+        initialTouch=false;
+        touching=false;
     }
 
     @Override
@@ -35,36 +42,34 @@ public class PlayerInputSystem extends IteratingSystem
         CPlayerInput playerComponent = inputMap.get(entity);
         CPosition posComponent = posMap.get(entity);
         CTexture texComponent = texMap.get(entity);
-        CShoot shootComponent = shootMap.get(entity);
+        CDivideBall divideBallComponent = divideBallMap.get(entity);
         CVelocity velComponent = velMap.get(entity);
 
         boolean isShooting=false;
-        if(InputListener.leftPressed)
+        if(InputListener.touch)
         {
-            texComponent.sprite.rotate(3.5f);
-            velComponent.vel.rotate(3.5f);
+            if(!initialTouch && !touching) {
+                initialTouch=true;
+            }
+            touching=true;
+        }else {
+            if(touching) {
+                initialTouch=false;
+            }
+            touching=false;
         }
 
-        if(InputListener.shootPressed)
-        {
-            isShooting=true;
+        if(initialTouch && !divideBallComponent.divided) {
+            divideBallComponent.divide=true;
+            initialTouch=false;
+            System.out.println("Touch");
         }
 
-        if(InputListener.rightPressed)
-        {
-            texComponent.sprite.rotate(-3.5f);
-            velComponent.vel.rotate(-3.5f);
+        if(touching) {
+            if(divideBallComponent.speed<6);
+                divideBallComponent.speed += accel;
+        }else {
+            divideBallComponent.speed = 0;
         }
-
-        if(InputListener.leftPressed && InputListener.rightPressed) {
-            isShooting=true;
-        }
-
-        /* apply shooting if attached to player */
-        if (shootComponent != null)
-        {
-            shootComponent.isShooting = isShooting;
-        }
-
     }
 }

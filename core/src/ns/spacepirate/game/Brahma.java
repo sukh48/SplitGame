@@ -36,11 +36,13 @@ public class Brahma
 
     public Entity createPlayer()
     {
-        TextureRegion playerTex = Assets.inst.getSpriteTexture("Arrow2");
+        TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
+        CDivideBall divideComponent = engine.createComponent(CDivideBall.class);
+        divideComponent.canMove=false;
 
         CTag tagComponent = engine.createComponent(CTag.class);
         tagComponent.tag = "Player";
@@ -64,6 +66,45 @@ public class Brahma
         player.add(engine.createComponent(CShoot.class));
         player.add(colliderComponent);
         player.add(graphicsComponent);
+        player.add(divideComponent);
+
+        return player;
+    }
+
+    public Entity createBall(int dir, float x, float y, Entity parent)
+    {
+        TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
+        CTexture graphicsComponent = engine.createComponent(CTexture.class);
+        CCollider colliderComponent = engine.createComponent(CCollider.class);
+        CPosition posComponent = engine.createComponent(CPosition.class);
+        CVelocity velComponent = engine.createComponent(CVelocity.class);
+        CDivideBall divideComponent = engine.createComponent(CDivideBall.class);
+        divideComponent.movingDir=dir;
+        divideComponent.canMove=true;
+        divideComponent.parent=parent;
+        divideComponent.attSpeed=2;
+
+        CTag tagComponent = engine.createComponent(CTag.class);
+        tagComponent.tag = "Ball";
+
+        posComponent.x = x;
+        posComponent.y = y;
+
+        velComponent.vel.setZero();
+        graphicsComponent.sprite.setRegion(playerTex);
+        graphicsComponent.sprite.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
+        graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
+        graphicsComponent.sprite.setOriginCenter();
+
+        colliderComponent.rect.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
+        colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+
+        Entity player = engine.createEntity();
+        player.add(posComponent);
+        player.add(velComponent);
+        player.add(colliderComponent);
+        player.add(graphicsComponent);
+        player.add(divideComponent);
 
         return player;
     }

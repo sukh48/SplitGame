@@ -29,20 +29,20 @@ public class PlayerCollisionHandler implements CollisionHandler
     @Override
     public void notifyCollision(Entity entity, Entity collidedWith)
     {
-        CTag tagComponent = collidedWith.getComponent(CTag.class);
-        if(tagComponent!=null && tagComponent.tag.equalsIgnoreCase("Ball")) {
-            if(collidedWith.getComponent(CDestroy.class)==null)
-            {
-                CVelocity velComponent = collidedWith.getComponent(CVelocity.class);
-                if(velComponent!=null) {
-                    velComponent.vel.setZero();
-                }
-
-                CDestroy destroyComponent = new CDestroy();
-                destroyComponent.addTweenEffect(TweenEffectAccessor.EFFECT_BOUNCE);
-                collidedWith.add(destroyComponent);
-            }
-        }
+//        CTag tagComponent = collidedWith.getComponent(CTag.class);
+//        if(tagComponent!=null && tagComponent.tag.equalsIgnoreCase("Ball")) {
+//            if(collidedWith.getComponent(CDestroy.class)==null)
+//            {
+//                CVelocity velComponent = collidedWith.getComponent(CVelocity.class);
+//                if(velComponent!=null) {
+//                    velComponent.vel.setZero();
+//                }
+//
+//                CDestroy destroyComponent = new CDestroy();
+//                destroyComponent.addTweenEffect(TweenEffectAccessor.EFFECT_BOUNCE);
+//                collidedWith.add(destroyComponent);
+//            }
+//        }
     }
 
     @Override
