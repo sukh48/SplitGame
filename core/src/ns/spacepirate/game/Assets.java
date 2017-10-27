@@ -44,6 +44,8 @@ public class Assets
 		assetManager.load("sprites/SpriteAtlas.txt", TextureAtlas.class);
 
 		loadFonts();
+
+        System.out.println("Hello");
 		
 		assetManager.finishLoading();
 	}
