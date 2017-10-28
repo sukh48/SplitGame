@@ -77,10 +77,10 @@ public class RenderingSystem extends IteratingSystem
             graphicComponent.sprite.draw(batch);
         }
 
-        pe.setPosition(playerPos.x+25, playerPos.y);
-        pe.draw(batch);
-        splashEffect.draw(batch);
-        splashGreen.draw(batch);
+//        pe.setPosition(playerPos.x+25, playerPos.y);
+//        pe.draw(batch);
+//        splashEffect.draw(batch);
+//        splashGreen.draw(batch);
 //        if (pe.isComplete())
 //            pe.reset();
 

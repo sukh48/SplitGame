@@ -18,6 +18,7 @@ public class CDivideBall extends Component implements Pool.Poolable
     public float speed;
     public float attSpeed;
     public boolean divided;
+    public boolean pressed;
     public Entity parent;
 
     public CDivideBall()
@@ -29,6 +30,7 @@ public class CDivideBall extends Component implements Pool.Poolable
         attSpeed=0;
         parent=null;
         divided=false;
+        pressed=false;
     }
 
     @Override
@@ -41,5 +43,6 @@ public class CDivideBall extends Component implements Pool.Poolable
         attSpeed=0;
         parent=null;
         divided=false;
+        pressed=false;
     }
 }

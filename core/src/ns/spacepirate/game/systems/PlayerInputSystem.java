@@ -21,7 +21,6 @@ public class PlayerInputSystem extends IteratingSystem
 
     boolean initialTouch;
     boolean touching;
-    float accel=1.5f;
 
     public PlayerInputSystem()
     {
@@ -59,17 +58,16 @@ public class PlayerInputSystem extends IteratingSystem
             touching=false;
         }
 
-        if(initialTouch && !divideBallComponent.divided) {
+        if(initialTouch) {
             divideBallComponent.divide=true;
             initialTouch=false;
             System.out.println("Touch");
         }
 
         if(touching) {
-            if(divideBallComponent.speed<6);
-                divideBallComponent.speed += accel;
+            divideBallComponent.pressed=true;
         }else {
-            divideBallComponent.speed = 0;
+            divideBallComponent.pressed=false;
         }
     }
 }

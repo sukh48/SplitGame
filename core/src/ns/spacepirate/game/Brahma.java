@@ -82,7 +82,8 @@ public class Brahma
         divideComponent.movingDir=dir;
         divideComponent.canMove=true;
         divideComponent.parent=parent;
-        divideComponent.attSpeed=2;
+        divideComponent.attSpeed=0.5f;
+        divideComponent.speed=5f;
 
         CTag tagComponent = engine.createComponent(CTag.class);
         tagComponent.tag = "Ball";

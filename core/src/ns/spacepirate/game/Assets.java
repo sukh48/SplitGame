@@ -45,8 +45,6 @@ public class Assets
 
 		loadFonts();
 
-        System.out.println("Hello");
-		
 		assetManager.finishLoading();
 	}
 	

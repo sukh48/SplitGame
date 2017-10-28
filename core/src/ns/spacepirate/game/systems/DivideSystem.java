@@ -46,8 +46,8 @@ public class DivideSystem extends IteratingSystem
         CPosition entityPos = posMap.get(entity);
 
         if(divideBall.divide) {
-            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-30, entityPos.y, entity);
-            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+30, entityPos.y, entity);
+            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, entity);
+            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, entity);
             engine.addEntity(ballLeft);
             engine.addEntity(ballRight);
 
@@ -55,6 +55,8 @@ public class DivideSystem extends IteratingSystem
             divideBall.divided=true;
         }
 
+        boolean destroy=false;
+        boolean pressed=false;
         if(divideBall.canMove) {
             if(divideBall.parent!=null)
             {
@@ -62,22 +64,30 @@ public class DivideSystem extends IteratingSystem
                 CDivideBall parent = divideBallMap.get(divideBall.parent);
                 entityPos.y = parPos.y;
 
-                divideBall.speed = parent.speed;
+                pressed = parent.pressed;
+
+                if(entityPos.x>=parPos.x-15 && entityPos.x<=parPos.x+15) {
+                    destroy = true;
+                }
             }
 
             if(divideBall.movingDir==CDivideBall.DIR_RIGHT)
             {
                 entityPos.x += divideBall.speed;
-                entityPos.x -= divideBall.attSpeed;
             }else if(divideBall.movingDir==CDivideBall.DIR_LEFT)
             {
                 entityPos.x -= divideBall.speed;
-                entityPos.x += divideBall.attSpeed;
             }
 
-            if(divideBall.attSpeed<5)
+            divideBall.speed -= divideBall.attSpeed;
+
+            if(pressed)
             {
-                divideBall.attSpeed += 1.5f;
+                divideBall.speed += 1f;
+            }
+
+            if(destroy) {
+                engine.removeEntity(entity);
             }
 
         }
