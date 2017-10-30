@@ -5,10 +5,15 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
+import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CDivideBall;
 import ns.spacepirate.game.components.CExplode;
 import ns.spacepirate.game.components.CPosition;
+import ns.spacepirate.game.components.CTexture;
 import ns.spacepirate.game.components.CVelocity;
 
 /**
@@ -22,6 +27,9 @@ public class DivideSystem extends IteratingSystem
 
     Engine engine;
     Brahma creator;
+
+    int count=-1;
+    boolean start=false;
 
     public DivideSystem(Brahma creator)
     {
@@ -40,6 +48,15 @@ public class DivideSystem extends IteratingSystem
     }
 
     @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+
+        if (start) {
+            count += 1;
+        }
+    }
+
+    @Override
     protected void processEntity(Entity entity, float deltaTime)
     {
         CDivideBall divideBall = divideBallMap.get(entity);
@@ -51,8 +68,14 @@ public class DivideSystem extends IteratingSystem
             engine.addEntity(ballLeft);
             engine.addEntity(ballRight);
 
+
+            System.out.println("Start: " + (entityPos.x - 20));
             divideBall.divide=false;
             divideBall.divided=true;
+
+            entity.remove(CTexture.class);
+
+            start=true;
         }
 
         boolean destroy=false;
@@ -68,6 +91,15 @@ public class DivideSystem extends IteratingSystem
 
                 if(entityPos.x>=parPos.x-15 && entityPos.x<=parPos.x+15) {
                     destroy = true;
+                    parent.divided=false;
+
+                    TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
+                    CTexture graphicsComponent = new CTexture();
+                    graphicsComponent.sprite.setRegion(playerTex);
+                    graphicsComponent.sprite.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
+                    graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
+                    graphicsComponent.sprite.setOriginCenter();
+                    divideBall.parent.add(graphicsComponent);
                 }
             }
 
@@ -79,11 +111,23 @@ public class DivideSystem extends IteratingSystem
                 entityPos.x -= divideBall.speed;
             }
 
-            divideBall.speed -= divideBall.attSpeed;
+            divideBall.speed += -divideBall.attSpeed + (pressed? 1f : 0);
 
-            if(pressed)
-            {
-                divideBall.speed += 1f;
+//            if(pressed)
+//            {
+//                if(count<10) {
+//                    divideBall.speed += 1f;
+//                }
+//
+//            }
+
+            if(divideBall.movingDir==CDivideBall.DIR_LEFT) {
+                //System.out.println("count: "+count);
+                //System.out.println(340-entityPos.x);
+
+                if(count>10) {
+                    //System.out.println("Speed: "+divideBall.speed);
+                }
             }
 
             if(destroy) {

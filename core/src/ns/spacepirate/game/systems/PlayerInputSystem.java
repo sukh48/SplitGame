@@ -58,7 +58,7 @@ public class PlayerInputSystem extends IteratingSystem
             touching=false;
         }
 
-        if(initialTouch) {
+        if(initialTouch && !divideBallComponent.divided) {
             divideBallComponent.divide=true;
             initialTouch=false;
             System.out.println("Touch");

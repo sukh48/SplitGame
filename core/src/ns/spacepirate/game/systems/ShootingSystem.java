@@ -45,25 +45,25 @@ public class ShootingSystem extends IntervalIteratingSystem
     @Override
     protected void processEntity(Entity entity)
     {
-        CShoot shootComponent = shootMap.get(entity);
-        CPosition entityPosition = posMap.get(entity);
-        CVelocity entityVelocity = velMap.get(entity);
-        CTexture entityTexture = entity.getComponent(CTexture.class);
-
-        if(shootComponent.isShooting)
-        {
-            Entity shootArrow = creator.createBullet();
-            CPosition posComponent = posMap.get(shootArrow);
-            CVelocity velComponent = velMap.get(shootArrow);
-
-            posComponent.x = entityPosition.x+entityTexture.sprite.getWidth()/2-10;
-            posComponent.y = entityPosition.y+entityTexture.sprite.getHeight();
-
-            velComponent.vel.set(entityVelocity.vel);
-            velComponent.vel.scl(5);
-
-            engine.addEntity(shootArrow);
-        }
+//        CShoot shootComponent = shootMap.get(entity);
+//        CPosition entityPosition = posMap.get(entity);
+//        CVelocity entityVelocity = velMap.get(entity);
+//        CTexture entityTexture = entity.getComponent(CTexture.class);
+//
+//        if(shootComponent.isShooting)
+//        {
+//            Entity shootArrow = creator.createBullet();
+//            CPosition posComponent = posMap.get(shootArrow);
+//            CVelocity velComponent = velMap.get(shootArrow);
+//
+//            posComponent.x = entityPosition.x+entityTexture.sprite.getWidth()/2-10;
+//            posComponent.y = entityPosition.y+entityTexture.sprite.getHeight();
+//
+//            velComponent.vel.set(entityVelocity.vel);
+//            velComponent.vel.scl(5);
+//
+//            engine.addEntity(shootArrow);
+//        }
 
     }
 

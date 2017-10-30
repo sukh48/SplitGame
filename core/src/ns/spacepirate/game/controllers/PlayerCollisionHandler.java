@@ -2,6 +2,9 @@ package ns.spacepirate.game.controllers;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.audio.Sound;
+
+import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.components.CDestroy;
 import ns.spacepirate.game.components.CTag;
 import ns.spacepirate.game.components.CTweenEffect;
@@ -16,9 +19,13 @@ public class PlayerCollisionHandler implements CollisionHandler
 {
     private final static PlayerCollisionHandler inst = new PlayerCollisionHandler();
 
+    Sound waterSound;
+
     private PlayerCollisionHandler()
     {
         // singleton
+
+        waterSound = Assets.inst.getSound(Assets.SOUND);
     }
 
     public static PlayerCollisionHandler getInstance()
@@ -29,20 +36,24 @@ public class PlayerCollisionHandler implements CollisionHandler
     @Override
     public void notifyCollision(Entity entity, Entity collidedWith)
     {
-//        CTag tagComponent = collidedWith.getComponent(CTag.class);
-//        if(tagComponent!=null && tagComponent.tag.equalsIgnoreCase("Ball")) {
-//            if(collidedWith.getComponent(CDestroy.class)==null)
-//            {
-//                CVelocity velComponent = collidedWith.getComponent(CVelocity.class);
-//                if(velComponent!=null) {
-//                    velComponent.vel.setZero();
-//                }
-//
-//                CDestroy destroyComponent = new CDestroy();
-//                destroyComponent.addTweenEffect(TweenEffectAccessor.EFFECT_BOUNCE);
-//                collidedWith.add(destroyComponent);
-//            }
-//        }
+        CTag tagComponent = collidedWith.getComponent(CTag.class);
+        if(tagComponent!=null && tagComponent.tag.equalsIgnoreCase("Coin")) {
+            if(collidedWith.getComponent(CDestroy.class)==null)
+            {
+                CVelocity velComponent = collidedWith.getComponent(CVelocity.class);
+                if(velComponent!=null) {
+                    velComponent.vel.setZero();
+                }
+
+                CDestroy destroyComponent = new CDestroy();
+                destroyComponent.addTweenEffect(TweenEffectAccessor.EFFECT_BOUNCE);
+                collidedWith.add(destroyComponent);
+
+                waterSound.stop();
+                waterSound.play();
+            }
+
+        }
     }
 
     @Override

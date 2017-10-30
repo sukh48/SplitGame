@@ -42,7 +42,7 @@ public class CollisionSystem extends IteratingSystem
 
         boolean collided=false;
 
-        entityCollider.rect.setPosition(entityPos.x-entityCollider.rect.width/2f, entityPos.y-entityCollider.rect.height/2f);
+        entityCollider.rect.setPosition(entityPos.x, entityPos.y);
         entityCollider.rect.setSize(50,50);
         for (Entity otherEntity : getEntities())
         {
@@ -51,8 +51,8 @@ public class CollisionSystem extends IteratingSystem
                 CPosition otherEntityPos = posMap.get(otherEntity);
                 CCollider otherCollider = boundsMap.get(otherEntity);
 
-                otherCollider.rect.setPosition(otherEntityPos.x-otherCollider.rect.width /2f,
-                                               otherEntityPos.y-otherCollider.rect.height/2f);
+                otherCollider.rect.setPosition(otherEntityPos.x,
+                                               otherEntityPos.y);
 
                 if(entityCollider.rect.overlaps(otherCollider.rect))
                 {

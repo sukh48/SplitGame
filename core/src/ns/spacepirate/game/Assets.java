@@ -2,6 +2,7 @@ package ns.spacepirate.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,7 +18,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
  ************************************************************************************/
 public class Assets
 {
-	public static final String T_BACKGROUND = "backgrounds/Background4.png";
+	public static final String T_BACKGROUND = "backgrounds/Background6.png";
+	public static final String T_BACKGROUND2 = "backgrounds/Background7.png";
+	public static final String T_BACKGROUND3 = "backgrounds/Background8.png";
+
+	public static final String SOUND = "music/waterblub.mp3";
+
 	public static final String F_FONT_PATH = "fonts/computer_pixel-7.ttf";
 	
 	public static final Assets inst = new Assets();
@@ -41,9 +47,15 @@ public class Assets
 	{
 		// load textures
 		assetManager.load(T_BACKGROUND, Texture.class);
+		assetManager.load(T_BACKGROUND2, Texture.class);
+		assetManager.load(T_BACKGROUND3, Texture.class);
 		assetManager.load("sprites/SpriteAtlas.txt", TextureAtlas.class);
 
 		loadFonts();
+
+		Sound sound = Gdx.audio.newSound(Gdx.files.internal("music/waterblub.mp3"));
+
+		assetManager.load(SOUND, Sound.class);
 
 		assetManager.finishLoading();
 	}
@@ -59,6 +71,11 @@ public class Assets
         font60 = generator.generateFont(params);        
     }
 	
+	public Sound getSound(String sound)
+	{
+		return assetManager.get(sound, Sound.class);
+	}
+
 	public Texture getTexture(String texture)
 	{
 		return assetManager.get(texture, Texture.class);

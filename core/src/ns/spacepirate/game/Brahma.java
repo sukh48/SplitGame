@@ -47,12 +47,15 @@ public class Brahma
         CTag tagComponent = engine.createComponent(CTag.class);
         tagComponent.tag = "Player";
 
-        posComponent.x = SpacePirate.V_WIDTH/2;
-        posComponent.y = SpacePirate.V_HEIGHT/2;
+        float width = playerTex.getRegionWidth()/2f;
+        float height = playerTex.getRegionHeight()/2f;
 
-        velComponent.vel.set(0,10);
+        posComponent.x = SpacePirate.V_WIDTH/2;//-width/2;
+        posComponent.y = SpacePirate.V_HEIGHT/2;//-height/2;
+
+        velComponent.vel.set(0,7f);
         graphicsComponent.sprite.setRegion(playerTex);
-        graphicsComponent.sprite.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
+        graphicsComponent.sprite.setSize(width, height);
         graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
         graphicsComponent.sprite.setOriginCenter();
 
@@ -67,13 +70,14 @@ public class Brahma
         player.add(colliderComponent);
         player.add(graphicsComponent);
         player.add(divideComponent);
+        player.add(tagComponent);
 
         return player;
     }
 
     public Entity createBall(int dir, float x, float y, Entity parent)
     {
-        TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
+        TextureRegion ballTex = Assets.inst.getSpriteTexture("Ball");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
@@ -82,8 +86,8 @@ public class Brahma
         divideComponent.movingDir=dir;
         divideComponent.canMove=true;
         divideComponent.parent=parent;
-        divideComponent.attSpeed=0.5f;
-        divideComponent.speed=5f;
+        divideComponent.attSpeed=0.5f/3;
+        divideComponent.speed=5f/4  ;
 
         CTag tagComponent = engine.createComponent(CTag.class);
         tagComponent.tag = "Ball";
@@ -92,87 +96,87 @@ public class Brahma
         posComponent.y = y;
 
         velComponent.vel.setZero();
-        graphicsComponent.sprite.setRegion(playerTex);
-        graphicsComponent.sprite.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
-        graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
+        graphicsComponent.sprite.setRegion(ballTex);
+        graphicsComponent.sprite.setSize(ballTex.getRegionWidth() / 2f, ballTex.getRegionHeight() / 2f);
+        graphicsComponent.sprite.setCenter(ballTex.getRegionWidth() / 4f, ballTex.getRegionHeight() / 4f);
         graphicsComponent.sprite.setOriginCenter();
 
-        colliderComponent.rect.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
+        colliderComponent.rect.setSize(ballTex.getRegionWidth() / 2f, ballTex.getRegionHeight() / 2f);
         colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
 
-        Entity player = engine.createEntity();
-        player.add(posComponent);
-        player.add(velComponent);
-        player.add(colliderComponent);
-        player.add(graphicsComponent);
-        player.add(divideComponent);
+        Entity ball = engine.createEntity();
+        ball.add(tagComponent);
+        ball.add(posComponent);
+        ball.add(velComponent);
+        ball.add(colliderComponent);
+        ball.add(graphicsComponent);
+        ball.add(divideComponent);
 
-        return player;
+        return ball;
     }
 
-    public Entity createAsteroid()
-    {
-        TextureRegion asteroidTex;
-        if(MathUtils.random(5)<-3)
-        {
-            asteroidTex = Assets.inst.getSpriteTexture("Spikes");
-        }else {
-            asteroidTex = Assets.inst.getSpriteTexture("Ball");
-        }
-
-        Entity asteroid = engine.createEntity();
+    public Entity createCoin(float x, float y) {
+        TextureRegion coinTex = Assets.inst.getSpriteTexture("Coin3");
+        CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
-        //velComponent.vel.y=-10;
-        CHealth healthComponent = engine.createComponent(CHealth.class);
-        CTexture graphicComponent = engine.createComponent(CTexture.class);
-        CTag tagComponent = new CTag();
 
-        tagComponent.tag = "Ball";
 
-        graphicComponent.sprite.setRegion(asteroidTex);
-        graphicComponent.sprite.setSize(asteroidTex.getRegionWidth(), asteroidTex.getRegionHeight());
+        CTag tagComponent = engine.createComponent(CTag.class);
+        tagComponent.tag = "Coin";
 
-        colliderComponent.rect.setSize(asteroidTex.getRegionWidth(), asteroidTex.getRegionHeight());
-//        colliderComponent.setHandler(AsteroidCollisionHandler.getInstance());
+        posComponent.x = x;
+        posComponent.y = y;
 
-        asteroid.add(colliderComponent);
-        asteroid.add(healthComponent);
-        asteroid.add(posComponent);
-        asteroid.add(velComponent);
-        asteroid.add(graphicComponent);
-        asteroid.add(tagComponent);
+        velComponent.vel.setZero();
+        graphicsComponent.sprite.setRegion(coinTex);
+        graphicsComponent.sprite.setSize(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
+        graphicsComponent.sprite.setCenter(coinTex.getRegionWidth() / 4f, coinTex.getRegionHeight() / 4f);
+        graphicsComponent.sprite.setOriginCenter();
 
-        return asteroid;
+        colliderComponent.rect.setSize(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
+
+        Entity coin = engine.createEntity();
+        coin.add(tagComponent);
+        coin.add(posComponent);
+        coin.add(velComponent);
+        coin.add(colliderComponent);
+        coin.add(graphicsComponent);
+
+        return coin;
     }
 
-    public Entity createBullet()
-    {
-        TextureRegion asteroidTex = Assets.inst.getSpriteTexture("Bullet");
-
-        Entity asteroid = engine.createEntity();
+    public Entity createObstacle(float x, float y, float width, float height) {
+        TextureRegion coinTex = Assets.inst.getSpriteTexture("Block1");
+        CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
-        CTexture graphicComponent = engine.createComponent(CTexture.class);
-        CTag tagComponent = new CTag();
 
-        tagComponent.tag = "Bullet";
 
-        graphicComponent.sprite.setRegion(asteroidTex);
-        graphicComponent.sprite.setSize(asteroidTex.getRegionWidth(), asteroidTex.getRegionHeight());
+        CTag tagComponent = engine.createComponent(CTag.class);
+        tagComponent.tag = "Block";
 
-//        colliderComponent.rect.setSize(asteroidTex.getRegionWidth(), asteroidTex.getRegionHeight());
-//        colliderComponent.setHandler(AsteroidCollisionHandler.getInstance());
+        posComponent.x = x;
+        posComponent.y = y;
 
-        asteroid.add(colliderComponent);
-        asteroid.add(posComponent);
-        asteroid.add(velComponent);
-        asteroid.add(graphicComponent);
-        asteroid.add(tagComponent);
+        velComponent.vel.setZero();
+        graphicsComponent.sprite.setRegion(coinTex);
+        graphicsComponent.sprite.setSize(width,height);
+//        graphicsComponent.sprite.setCenter(width/2, height/2);
+//        graphicsComponent.sprite.setOriginCenter();
 
-        return asteroid;
+        colliderComponent.rect.setSize(width,height);
+
+        Entity coin = engine.createEntity();
+        coin.add(tagComponent);
+        coin.add(posComponent);
+        coin.add(velComponent);
+        coin.add(colliderComponent);
+        coin.add(graphicsComponent);
+
+        return coin;
     }
 
 }

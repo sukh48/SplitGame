@@ -3,6 +3,8 @@ package ns.spacepirate.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CVelocity;
@@ -12,14 +14,15 @@ import ns.spacepirate.game.components.CVelocity;
  */
 public class CameraSystem extends EntitySystem
 {
-    Camera camera;
+    OrthographicCamera camera;
     CVelocity camMovement;
     Entity entityToFollow;
 
     public CameraSystem(Camera camera)
     {
-        this.camera = camera;
+        this.camera = (OrthographicCamera)camera;
         this.camera.position.set(0,0,0);
+        //this.camera.zoom+=5.5f;
         camMovement = new CVelocity();
     }
 

@@ -45,22 +45,22 @@ public class AsteroidSystem extends EntitySystem
     @Override
     public void update(float deltaTime)
     {
-        timeSinceSpawn+=deltaTime;
-        if(timeSinceSpawn>0.5f)
-        {
-            for (int i=0;i<1;i++)
-            {
-                Entity asteroid = creator.createAsteroid();
-                CPosition asteroidPos = asteroid.getComponent(CPosition.class);
-                CVelocity asteroidVel = asteroid.getComponent(CVelocity.class);
-
-                spawnAsteroid(asteroidPos);
-
-                engine.addEntity(asteroid);
-            }
-
-            timeSinceSpawn=0;
-        }
+//        timeSinceSpawn+=deltaTime;
+//        if(timeSinceSpawn>0.5f)
+//        {
+//            for (int i=0;i<1;i++)
+//            {
+//                Entity asteroid = creator.createAsteroid();
+//                CPosition asteroidPos = asteroid.getComponent(CPosition.class);
+//                CVelocity asteroidVel = asteroid.getComponent(CVelocity.class);
+//
+//                spawnAsteroid(asteroidPos);
+//
+//                engine.addEntity(asteroid);
+//            }
+//
+//            timeSinceSpawn=0;
+//        }
     }
 
 }
