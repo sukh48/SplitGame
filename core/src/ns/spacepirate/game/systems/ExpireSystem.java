@@ -38,7 +38,7 @@ public class ExpireSystem extends IteratingSystem
     {
         CPosition posComponent = posMap.get(entity);
         if(posComponent.x>cameraSystem.camera.position.x+SpacePirate.V_WIDTH   || posComponent.x<cameraSystem.camera.position.x-SpacePirate.V_WIDTH ||
-           posComponent.y>cameraSystem.camera.position.y+SpacePirate.V_HEIGHT  || posComponent.y<cameraSystem.camera.position.y-SpacePirate.V_HEIGHT )
+           posComponent.y>cameraSystem.camera.position.y+SpacePirate.V_HEIGHT*2  || posComponent.y<cameraSystem.camera.position.y-SpacePirate.V_HEIGHT )
         {
             engine.removeEntity(entity);
         }

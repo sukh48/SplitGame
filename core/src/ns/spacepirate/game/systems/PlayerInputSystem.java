@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import ns.spacepirate.game.InputListener;
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.*;
+import ns.spacepirate.game.tween.TweenEffectAccessor;
 
 public class PlayerInputSystem extends IteratingSystem
 {

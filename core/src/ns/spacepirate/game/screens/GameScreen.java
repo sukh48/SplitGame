@@ -51,7 +51,7 @@ public class GameScreen extends ScreenAdapter
         engine.addSystem(new BackgroundSystem(player));
         engine.addSystem(new BackgroundRenderSystem(cameraSystem));
         engine.addSystem(new RenderingSystem(cameraSystem));
-        //engine.addSystem(new DebugRenderingSystem(cameraSystem));
+//        engine.addSystem(new DebugRenderingSystem(cameraSystem));
         engine.addSystem(new ExpireSystem(cameraSystem));
     }
 

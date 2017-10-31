@@ -74,9 +74,9 @@ public class BackgroundSystem extends EntitySystem
         super.addedToEngine(engine);
         this.engine= (PooledEngine)engine;
 
-        back1 = createBackground(0,0, Assets.T_BACKGROUND);
+        back1 = createBackground(0,0, Assets.T_BACKGROUND2);
         back2 = createBackground(0,SpacePirate.V_HEIGHT, Assets.T_BACKGROUND2);
-        back3 = createBackground(0,SpacePirate.V_HEIGHT*2,Assets.T_BACKGROUND3);
+        back3 = createBackground(0,SpacePirate.V_HEIGHT*2,Assets.T_BACKGROUND2);
         engine.addEntity(back1);
         engine.addEntity(back2);
         engine.addEntity(back3);

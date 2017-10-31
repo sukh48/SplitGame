@@ -55,7 +55,6 @@ public class SpawnSystem extends EntitySystem
             if(obstacleFlag) {
                 generateObstacles();
             }else {
-                //generateObstacles();
                 generateCoins();
             }
 
@@ -88,7 +87,7 @@ public class SpawnSystem extends EntitySystem
         float pressed=MathUtils.random(30);
 
         float alt = MathUtils.random(80,260);
-        for(int i=0; i<200; i+=1) {
+        for(int i=0; i<250; i+=12) {
 
             //xval = 0.5f * (-1/2f+(1*count)) * (i*i) + (v1*i);
 
@@ -97,10 +96,10 @@ public class SpawnSystem extends EntitySystem
             float offsetX = (SpacePirate.V_WIDTH/2f)-xval;
 
             System.out.println(xval);
-            if(i%12==0) {
-                engine.addEntity(creator.createCoin(offsetX, startYPos + (5 * yCount)));
-                engine.addEntity(creator.createCoin(offsetX+(xval*2), startYPos+(5*yCount)));
-            }
+            //if(i%12==0) {
+                engine.addEntity(creator.createCoin(offsetX, startYPos + (playerVel.vel.y * yCount * 12)));
+                engine.addEntity(creator.createCoin(offsetX+(xval*2), startYPos+(playerVel.vel.y * yCount * 12)));
+            //}
             //engine.addEntity(creator.createCoin(offsetX+(xval*2), startYPos+(5*yCount)));
 
             if(i==pressed) {

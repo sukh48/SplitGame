@@ -53,7 +53,7 @@ public class Brahma
         posComponent.x = SpacePirate.V_WIDTH/2;//-width/2;
         posComponent.y = SpacePirate.V_HEIGHT/2;//-height/2;
 
-        velComponent.vel.set(0,7f);
+        velComponent.vel.set(0,4.5f);
         graphicsComponent.sprite.setRegion(playerTex);
         graphicsComponent.sprite.setSize(width, height);
         graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
@@ -86,7 +86,7 @@ public class Brahma
         divideComponent.movingDir=dir;
         divideComponent.canMove=true;
         divideComponent.parent=parent;
-        divideComponent.attSpeed=0.5f/3;
+        divideComponent.attSpeed=0.5f/2f;
         divideComponent.speed=5f/4  ;
 
         CTag tagComponent = engine.createComponent(CTag.class);
@@ -148,7 +148,7 @@ public class Brahma
     }
 
     public Entity createObstacle(float x, float y, float width, float height) {
-        TextureRegion coinTex = Assets.inst.getSpriteTexture("Block1");
+        TextureRegion coinTex = Assets.inst.getSpriteTexture("Block3");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);

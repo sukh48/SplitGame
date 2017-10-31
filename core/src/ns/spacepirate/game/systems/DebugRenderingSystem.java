@@ -39,7 +39,7 @@ public class DebugRenderingSystem extends IteratingSystem
         {
             CCollider boundsComponent = boundsMap.get(entity);
 
-            shapeRenderer.rect(boundsComponent.rect.x, boundsComponent.rect.y,
+            shapeRenderer.rect(boundsComponent.rect.x-boundsComponent.rect.width/2, boundsComponent.rect.y,
                                boundsComponent.rect.width, boundsComponent.rect.height);
 
             CRange rangeComponent = entity.getComponent(CRange.class);

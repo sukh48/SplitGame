@@ -10,11 +10,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
 import ns.spacepirate.game.SpacePirate;
+import ns.spacepirate.game.components.CCollider;
 import ns.spacepirate.game.components.CDivideBall;
 import ns.spacepirate.game.components.CExplode;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
+import ns.spacepirate.game.components.CTweenEffect;
 import ns.spacepirate.game.components.CVelocity;
+import ns.spacepirate.game.controllers.PlayerCollisionHandler;
 
 /**
  * Created by sukhmac on 2016-02-07.
@@ -65,15 +68,16 @@ public class DivideSystem extends IteratingSystem
         if(divideBall.divide) {
             Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, entity);
             Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, entity);
+
             engine.addEntity(ballLeft);
             engine.addEntity(ballRight);
-
 
             System.out.println("Start: " + (entityPos.x - 20));
             divideBall.divide=false;
             divideBall.divided=true;
 
             entity.remove(CTexture.class);
+            entity.remove(CCollider.class);
 
             start=true;
         }
@@ -96,10 +100,15 @@ public class DivideSystem extends IteratingSystem
                     TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
                     CTexture graphicsComponent = new CTexture();
                     graphicsComponent.sprite.setRegion(playerTex);
-                    graphicsComponent.sprite.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
-                    graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
+                    graphicsComponent.sprite.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
+                    graphicsComponent.sprite.setCenter(playerTex.getRegionWidth() / 4f, playerTex.getRegionHeight() / 4f);
                     graphicsComponent.sprite.setOriginCenter();
                     divideBall.parent.add(graphicsComponent);
+
+                    CCollider colliderComponent = new CCollider();
+                    colliderComponent.rect.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
+                    colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+                    divideBall.parent.add(colliderComponent);
                 }
             }
 

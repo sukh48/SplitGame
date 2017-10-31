@@ -1,5 +1,5 @@
 SpriteAtlas.png
-size: 500, 120
+size: 716, 121
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -17,30 +17,44 @@ Block1
   orig: 100, 100
   offset: 0, 0
   index: -1
-Coin1
+Block2
   rotate: false
   xy: 200, 0
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-Coin2
+Block3
   rotate: false
   xy: 300, 0
+  size: 96, 121
+  orig: 96, 121
+  offset: 0, 0
+  index: -1
+Coin1
+  rotate: false
+  xy: 396, 0
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+Coin2
+  rotate: false
+  xy: 496, 0
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 Coin3
   rotate: false
-  xy: 400, 0
+  xy: 596, 0
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 0, 100
+  xy: 696, 0
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
