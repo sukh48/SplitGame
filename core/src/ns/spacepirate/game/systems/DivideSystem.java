@@ -97,7 +97,7 @@ public class DivideSystem extends IteratingSystem
                     destroy = true;
                     parent.divided=false;
 
-                    TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
+                    TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball3");
                     CTexture graphicsComponent = new CTexture();
                     graphicsComponent.sprite.setRegion(playerTex);
                     graphicsComponent.sprite.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);

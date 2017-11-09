@@ -3,6 +3,7 @@ package ns.spacepirate.game.screens;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ns.spacepirate.game.Assets;
@@ -17,6 +18,8 @@ public class GameScreen extends ScreenAdapter
     //SpriteBatch batch;
     PooledEngine engine;
     Brahma creator;
+
+    FPSLogger fpsLogger = new FPSLogger();
 
     public GameScreen(SpacePirate game)
     {
@@ -50,6 +53,7 @@ public class GameScreen extends ScreenAdapter
         engine.addSystem(new DestroyAnimationSystem());
         engine.addSystem(new BackgroundSystem(player));
         engine.addSystem(new BackgroundRenderSystem(cameraSystem));
+        engine.addSystem(new ShapeRenderingSystem(cameraSystem));
         engine.addSystem(new RenderingSystem(cameraSystem));
 //        engine.addSystem(new DebugRenderingSystem(cameraSystem));
         engine.addSystem(new ExpireSystem(cameraSystem));
@@ -65,6 +69,7 @@ public class GameScreen extends ScreenAdapter
     {
         game.cam.update();
         update(delta);
+        fpsLogger.log();
     }
 
     @Override

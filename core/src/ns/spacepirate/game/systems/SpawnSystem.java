@@ -95,7 +95,7 @@ public class SpawnSystem extends EntitySystem
 
             float offsetX = (SpacePirate.V_WIDTH/2f)-xval;
 
-            System.out.println(xval);
+            //System.out.println(xval);
             //if(i%12==0) {
                 engine.addEntity(creator.createCoin(offsetX, startYPos + (playerVel.vel.y * yCount * 12)));
                 engine.addEntity(creator.createCoin(offsetX+(xval*2), startYPos+(playerVel.vel.y * yCount * 12)));

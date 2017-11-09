@@ -72,7 +72,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>15</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -84,7 +84,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>10</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -196,8 +196,16 @@
             <filename>Ball.png</filename>
             <filename>Coin1.png</filename>
             <filename>Coin2.png</filename>
-            <filename>Coin3.png</filename>
             <filename>Block1.png</filename>
+            <filename>Coin4.png</filename>
+            <filename>Block2.png</filename>
+            <filename>Block3.png</filename>
+            <filename>Block4.png</filename>
+            <filename>Coin6.png</filename>
+            <filename>Ball2.png</filename>
+            <filename>Coin7.png</filename>
+            <filename>Ball3.png</filename>
+            <filename>Block5.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

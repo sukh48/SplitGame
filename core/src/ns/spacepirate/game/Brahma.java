@@ -36,7 +36,7 @@ public class Brahma
 
     public Entity createPlayer()
     {
-        TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball");
+        TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball3");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
@@ -77,7 +77,7 @@ public class Brahma
 
     public Entity createBall(int dir, float x, float y, Entity parent)
     {
-        TextureRegion ballTex = Assets.inst.getSpriteTexture("Ball");
+        TextureRegion ballTex = Assets.inst.getSpriteTexture("Ball3");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
@@ -116,7 +116,7 @@ public class Brahma
     }
 
     public Entity createCoin(float x, float y) {
-        TextureRegion coinTex = Assets.inst.getSpriteTexture("Coin3");
+        TextureRegion coinTex = Assets.inst.getSpriteTexture("Coin7");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
@@ -132,7 +132,7 @@ public class Brahma
         velComponent.vel.setZero();
         graphicsComponent.sprite.setRegion(coinTex);
         graphicsComponent.sprite.setSize(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
-        graphicsComponent.sprite.setCenter(coinTex.getRegionWidth() / 4f, coinTex.getRegionHeight() / 4f);
+        graphicsComponent.sprite.setCenter(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
         graphicsComponent.sprite.setOriginCenter();
 
         colliderComponent.rect.setSize(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
@@ -148,7 +148,10 @@ public class Brahma
     }
 
     public Entity createObstacle(float x, float y, float width, float height) {
-        TextureRegion coinTex = Assets.inst.getSpriteTexture("Block3");
+
+
+
+        TextureRegion coinTex = Assets.inst.getSpriteTexture("Block5");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
         CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);

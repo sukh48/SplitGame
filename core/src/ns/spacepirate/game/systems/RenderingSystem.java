@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CBackground;
 import ns.spacepirate.game.components.CTexture;
@@ -40,6 +42,7 @@ public class RenderingSystem extends IteratingSystem
         //camera.update();
 
         batch.setProjectionMatrix(camera.combined);
+        batch.enableBlending();
         batch.begin();
 
         for(Entity entity : getEntities())
@@ -49,11 +52,12 @@ public class RenderingSystem extends IteratingSystem
             float height = graphicComponent.sprite.getHeight();
             CPosition positionComponent = posMap.get(entity);
 
-            graphicComponent.sprite.setPosition(positionComponent.x-width/2, positionComponent.y);
+            graphicComponent.sprite.setPosition(positionComponent.x-width/2f, positionComponent.y-height/2f);
             graphicComponent.sprite.draw(batch);
         }
 
         batch.end();
+
     }
 
     @Override

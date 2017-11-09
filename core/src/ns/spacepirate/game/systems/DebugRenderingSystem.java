@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ns.spacepirate.game.components.CCollider;
 import ns.spacepirate.game.components.CPosition;
@@ -34,12 +35,13 @@ public class DebugRenderingSystem extends IteratingSystem
     public void update(float deltaTime)
     {
         shapeRenderer.setProjectionMatrix(cameraSystem.camera.combined);
+        shapeRenderer.setColor(Color.GREEN);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for(Entity entity : getEntities())
         {
             CCollider boundsComponent = boundsMap.get(entity);
 
-            shapeRenderer.rect(boundsComponent.rect.x-boundsComponent.rect.width/2, boundsComponent.rect.y,
+            shapeRenderer.rect(boundsComponent.rect.x-boundsComponent.rect.width/2, boundsComponent.rect.y-boundsComponent.rect.height/2,
                                boundsComponent.rect.width, boundsComponent.rect.height);
 
             CRange rangeComponent = entity.getComponent(CRange.class);

@@ -1,60 +1,102 @@
 SpriteAtlas.png
-size: 716, 121
+size: 1389, 125
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 Ball
   rotate: false
-  xy: 0, 0
+  xy: 10, 10
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
+Ball2
+  rotate: false
+  xy: 125, 10
+  size: 69, 66
+  orig: 69, 66
+  offset: 0, 0
+  index: -1
+Ball3
+  rotate: false
+  xy: 209, 10
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
 Block1
   rotate: false
-  xy: 100, 0
+  xy: 296, 10
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 Block2
   rotate: false
-  xy: 200, 0
+  xy: 411, 10
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 Block3
   rotate: false
-  xy: 300, 0
-  size: 96, 121
-  orig: 96, 121
+  xy: 526, 10
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+Block4
+  rotate: false
+  xy: 641, 10
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+Block5
+  rotate: false
+  xy: 756, 10
+  size: 106, 105
+  orig: 106, 105
   offset: 0, 0
   index: -1
 Coin1
   rotate: false
-  xy: 396, 0
+  xy: 877, 10
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 Coin2
   rotate: false
-  xy: 496, 0
+  xy: 992, 10
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-Coin3
+Coin4
   rotate: false
-  xy: 596, 0
+  xy: 1107, 10
   size: 100, 100
   orig: 100, 100
+  offset: 0, 0
+  index: -1
+Coin6
+  rotate: false
+  xy: 1222, 10
+  size: 49, 51
+  orig: 49, 51
+  offset: 0, 0
+  index: -1
+Coin7
+  rotate: false
+  xy: 1286, 10
+  size: 53, 54
+  orig: 53, 54
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 696, 0
+  xy: 1354, 10
   size: 20, 20
   orig: 20, 20
   offset: 0, 0

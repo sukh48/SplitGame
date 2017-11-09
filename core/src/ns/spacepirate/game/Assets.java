@@ -20,7 +20,7 @@ public class Assets
 {
 	public static final String T_BACKGROUND = "backgrounds/Background6.png";
 	public static final String T_BACKGROUND2 = "backgrounds/Background7.png";
-	public static final String T_BACKGROUND3 = "backgrounds/Background8.png";
+	public static final String T_BACKGROUND3 = "backgrounds/Background10.png";
 
 	public static final String SOUND = "music/waterblub.mp3";
 
