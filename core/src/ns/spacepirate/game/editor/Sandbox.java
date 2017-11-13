@@ -31,11 +31,11 @@ import ns.spacepirate.game.systems.BackgroundRenderSystem;
 import ns.spacepirate.game.systems.BackgroundSystem;
 import ns.spacepirate.game.systems.CameraSystem;
 import ns.spacepirate.game.systems.CollisionSystem;
+import ns.spacepirate.game.systems.DebugRenderingSystem;
 import ns.spacepirate.game.systems.DestroyAnimationSystem;
 import ns.spacepirate.game.systems.DivideSystem;
 import ns.spacepirate.game.systems.ExpireSystem;
 import ns.spacepirate.game.systems.MovementSystem;
-import ns.spacepirate.game.systems.PlayerInputSystem;
 import ns.spacepirate.game.systems.RenderingSystem;
 import ns.spacepirate.game.systems.ShapeRenderingSystem;
 import ns.spacepirate.game.systems.SpawnSystem;
@@ -69,7 +69,7 @@ public class Sandbox implements ApplicationListener
         engine = new PooledEngine();
         creator = new Brahma(engine);
 
-        this.currMode = MODE_CREATE;
+        this.currMode = MODE_EDIT;
         //this.controller = controller;
     }
 
@@ -96,24 +96,29 @@ public class Sandbox implements ApplicationListener
         player = creator.createPlayer();
         CVelocity velocityComp = player.getComponent(CVelocity.class);
         player.add(new CTrail());
-        //velocityComp.vel.setZero();
+        velocityComp.vel.setZero();
         engine.addEntity(player);
 
         CameraSystem cameraSystem = new CameraSystem(cam);
         //cameraSystem.follow(player);
 
         engine.addSystem(cameraSystem);
-        engine.addSystem(new PlayerInputSystem());
         engine.addSystem(new MovementSystem());
+        engine.addSystem(new CollisionSystem());
+        engine.addSystem(new InputModeSystem(creator,this));
         engine.addSystem(new DivideEditorSystem(creator));
         engine.addSystem(new TrailSystem(0.2f, creator));
-        engine.addSystem(new InputModeSystem(creator,this));
         //engine.addSystem(new BackgroundSystem(player, creator));
         //engine.addSystem(new BackgroundRenderSystem(cameraSystem));
         //engine.addSystem(new ShapeRenderingSystem(cameraSystem));
         engine.addSystem(new RenderingSystem(cameraSystem));
-//        engine.addSystem(new DebugRenderingSystem(cameraSystem));
+        engine.addSystem(new DebugRenderingSystem(cameraSystem));
         //engine.addSystem(new ExpireSystem(cameraSystem));
+    }
+
+    public void setMode(int mode)
+    {
+        this.currMode = mode;
     }
 
     public int getMode()
@@ -204,7 +209,7 @@ public class Sandbox implements ApplicationListener
     @Override
     public void render() {
         GL20 gl = Gdx.gl;
-        gl.glClearColor(1.0f, 0.5f, 0.0f, 0.0f);
+        gl.glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cam.update();
