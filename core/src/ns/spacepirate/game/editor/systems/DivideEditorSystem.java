@@ -1,4 +1,4 @@
-package ns.spacepirate.game.systems;
+package ns.spacepirate.game.editor.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
@@ -11,21 +11,19 @@ import java.util.ArrayList;
 
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
-import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CCollider;
 import ns.spacepirate.game.components.CDivideBall;
-import ns.spacepirate.game.components.CExplode;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
-import ns.spacepirate.game.components.CTweenEffect;
 import ns.spacepirate.game.components.CVelocity;
 import ns.spacepirate.game.controllers.InputActionListener;
 import ns.spacepirate.game.controllers.PlayerCollisionHandler;
+import ns.spacepirate.game.editor.components.CTrail;
 
 /**
  * Created by sukhmac on 2016-02-07.
  */
-public class DivideSystem extends IteratingSystem
+public class DivideEditorSystem extends IteratingSystem
 {
     ComponentMapper<CDivideBall> divideBallMap;
     ComponentMapper<CPosition> posMap;
@@ -41,7 +39,7 @@ public class DivideSystem extends IteratingSystem
     ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
     ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
 
-    public DivideSystem(Brahma creator)
+    public DivideEditorSystem(Brahma creator)
     {
         super(Family.all(CDivideBall.class, CPosition.class, CVelocity.class).get());
         this.creator = creator;
@@ -90,6 +88,11 @@ public class DivideSystem extends IteratingSystem
             Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
             Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
 
+            ballLeft.add(new CTrail());
+            ballRight.add(new CTrail());
+
+            entity.remove(CTrail.class);
+
             entitiesToAdd.add(ballLeft);
             entitiesToAdd.add(ballRight);
 //            engine.addEntity(ballLeft);
@@ -130,6 +133,7 @@ public class DivideSystem extends IteratingSystem
                 colliderComponent.rect.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
                 colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
                 divideBall.parent.add(colliderComponent);
+                divideBall.parent.add(new CTrail());
             }
         }
 

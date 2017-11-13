@@ -39,7 +39,9 @@ public class CameraSystem extends EntitySystem
     @Override
     public void update(float deltaTime)
     {
-        CPosition entityPos = entityToFollow.getComponent(CPosition.class);
-        camera.position.set(SpacePirate.V_WIDTH/2, entityPos.y+200, 0);
+        if(entityToFollow!=null) {
+            CPosition entityPos = entityToFollow.getComponent(CPosition.class);
+            camera.position.set(SpacePirate.V_WIDTH / 2, entityPos.y + 200, 0);
+        }
     }
 }

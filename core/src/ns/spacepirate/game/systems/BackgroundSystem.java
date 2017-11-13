@@ -7,14 +7,21 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 
 import ns.spacepirate.game.Assets;
+import ns.spacepirate.game.Brahma;
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CBackground;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
 import ns.spacepirate.game.components.CVelocity;
+import ns.spacepirate.game.utils.GameSector;
+import ns.spacepirate.game.utils.LevelParser;
 
 /**
  * Created by sukhmac on 17-10-28.
@@ -35,14 +42,23 @@ public class BackgroundSystem extends EntitySystem
     ComponentMapper<CVelocity> velMap;
 
     float movedDist;
+    ArrayList<GameSector> sectors;
+    int currSecIndex;
 
-    public BackgroundSystem(Entity player)
+    Brahma creator;
+
+    public BackgroundSystem(Entity player, Brahma creator)
     {
         super();
         posMap = ComponentMapper.getFor(CPosition.class);
         velMap = ComponentMapper.getFor(CVelocity.class);
         movedDist=0;
         this.player = player;
+
+        sectors = LevelParser.parse();
+        currSecIndex=0;
+
+        this.creator = creator;
     }
 
     @Override
@@ -58,6 +74,10 @@ public class BackgroundSystem extends EntitySystem
 
         if(movedDist>=SpacePirate.V_HEIGHT) {
             currBottomPos.y = currTopPos.y + SpacePirate.V_HEIGHT;
+            createSector(currSecIndex, currBottomPos.y);
+            currSecIndex += 1;
+            currSecIndex = currSecIndex % sectors.size();
+
             movedDist=0;
 
             Entity temp = currBottom;
@@ -67,6 +87,21 @@ public class BackgroundSystem extends EntitySystem
         }
 
 
+    }
+
+    public void createSector(int sectorIndex, float pos)
+    {
+        Gdx.app.log("MyTag", "my informative message");
+        Gdx.app.error("MyTag", "my error message");
+        Gdx.app.debug("MyTag", "my debug message");
+
+
+        GameSector sector = sectors.get(sectorIndex);
+        for (Vector2 objPos : sector.getObjs())
+        {
+            Entity obstacle = creator.createObstacle(objPos.x, objPos.y+pos, 50, 50);
+            engine.addEntity(obstacle);
+        }
     }
 
     @Override

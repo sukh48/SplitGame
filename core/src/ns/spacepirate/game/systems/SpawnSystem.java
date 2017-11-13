@@ -53,9 +53,9 @@ public class SpawnSystem extends EntitySystem
 
         if(distMoved> SpacePirate.V_HEIGHT) {
             if(obstacleFlag) {
-                generateObstacles();
+                //generateObstacles();
             }else {
-                generateCoins();
+                //generateCoins();
             }
 
             obstacleFlag=!obstacleFlag;

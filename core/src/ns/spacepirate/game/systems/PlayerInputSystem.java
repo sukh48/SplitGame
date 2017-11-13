@@ -1,74 +1,62 @@
 package ns.spacepirate.game.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.math.Vector2;
 import ns.spacepirate.game.InputListener;
-import ns.spacepirate.game.SpacePirate;
-import ns.spacepirate.game.components.*;
-import ns.spacepirate.game.tween.TweenEffectAccessor;
+import ns.spacepirate.game.controllers.InputActionListener;
 
-public class PlayerInputSystem extends IteratingSystem
+public class PlayerInputSystem extends EntitySystem
 {
-    Vector2 offsetPos = new Vector2();
-
-    ComponentMapper<CPlayerInput> inputMap;
-    ComponentMapper<CPosition> posMap;
-    ComponentMapper<CVelocity> velMap;
-    ComponentMapper<CDivideBall> divideBallMap;
-    ComponentMapper<CTexture> texMap;
-
     boolean initialTouch;
     boolean touching;
 
     public PlayerInputSystem()
     {
-        super(Family.all(CPlayerInput.class, CPosition.class, CVelocity.class, CDivideBall.class).get());
-        inputMap = ComponentMapper.getFor(CPlayerInput.class);
-        posMap = ComponentMapper.getFor(CPosition.class);
-        velMap = ComponentMapper.getFor(CVelocity.class);
-        divideBallMap = ComponentMapper.getFor(CDivideBall.class);
-        texMap = ComponentMapper.getFor(CTexture.class);
-
         initialTouch=false;
         touching=false;
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime)
-    {
-        CPlayerInput playerComponent = inputMap.get(entity);
-        CPosition posComponent = posMap.get(entity);
-        CTexture texComponent = texMap.get(entity);
-        CDivideBall divideBallComponent = divideBallMap.get(entity);
-        CVelocity velComponent = velMap.get(entity);
+    public void update(float deltaTime) {
+        super.update(deltaTime);
 
-        boolean isShooting=false;
-        if(InputListener.touch)
+//        if(InputListener.touched)
+//        {
+//            if(!initialTouch && !touching) {
+//                initialTouch=true;
+//            }
+//            touching=true;
+//        }else {
+//            if(touching) {
+//                initialTouch=false;
+//            }
+//            touching=false;
+//        }
+
+        if(InputListener.touched)
         {
-            if(!initialTouch && !touching) {
-                initialTouch=true;
+            if(!initialTouch) {
+                initialTouch = true;
+                InputActionListener.getInstance().set(InputActionListener.FIRST_TOUCH);
+            }else {
+                InputActionListener.getInstance().set(InputActionListener.PRESSED);
             }
-            touching=true;
-        }else {
-            if(touching) {
-                initialTouch=false;
-            }
-            touching=false;
-        }
 
-        if(initialTouch && !divideBallComponent.divided) {
-            divideBallComponent.divide=true;
+        }else {
+            InputActionListener.getInstance().set(InputActionListener.NONE);
             initialTouch=false;
-            System.out.println("Touch");
         }
 
-        if(touching) {
-            divideBallComponent.pressed=true;
-        }else {
-            divideBallComponent.pressed=false;
-        }
+//        if(initialTouch && !divideBallComponent.divided) {
+//            divideBallComponent.divide=true;
+//            initialTouch=false;
+//            System.out.println("Touch");
+//        }
+
+//        if(initialTouch) {
+//            System.out.println("INITIAL Touch");
+//            InputActionListener.getInstance().set(InputActionListener.FIRST_TOUCH);
+//        }
     }
+
 }

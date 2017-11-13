@@ -1,10 +1,12 @@
 package ns.spacepirate.game;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import ns.spacepirate.game.controllers.InputActionListener;
 
 /**
  * Created by sukhmac on 2016-02-06.
@@ -12,8 +14,12 @@ import com.badlogic.gdx.math.Vector3;
 public class InputListener implements InputProcessor
 {
 
-    public static boolean touch;
-    public static Vector2 touchV = new Vector2();
+    public static boolean touched=false;
+    public static boolean firstTouch=false;
+
+    public static Vector2 touchedPos = new Vector2();
+
+    //public static Vector2 touchV = new Vector2();
 
     OrthographicCamera cam;
 
@@ -26,15 +32,22 @@ public class InputListener implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        touch = true;
-        return touch;
+        touched = true;
+        Vector3 vector3 = new Vector3();
+        vector3.set(screenX, screenY,0);
+        cam.unproject(vector3);
+        touchedPos.set(vector3.x, vector3.y);
+
+        System.out.println("X: "+vector3.x+" y: "+vector3.y);
+
+        return touched;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        touch=false;
-        return touch;
+        touched = false;
+        return touched;
     }
 
     @Override
@@ -72,4 +85,49 @@ public class InputListener implements InputProcessor
     {
         return false;
     }
+
+//    @Override
+//    public boolean touchDown(float x, float y, int pointer, int button) {
+//        System.out.println("TOUCHDOWN");
+//        touched=true;
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean tap(float x, float y, int count, int button) {
+//        System.out.println("Tap");
+//        touched=false;
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean longPress(float x, float y) {
+//        System.out.println("PRESSED");
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean fling(float velocityX, float velocityY, int button) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean pan(float x, float y, float deltaX, float deltaY) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean panStop(float x, float y, int pointer, int button) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean zoom(float initialDistance, float distance) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+//        return false;
+//    }
 }

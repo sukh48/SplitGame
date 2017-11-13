@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -48,8 +49,12 @@ public class SpacePirate extends Game {
 
 	private void start()
 	{
+//		GestureDetector gd = new GestureDetector(new InputListener(cam));
+
 		Gdx.input.setInputProcessor(new InputListener(cam));
 		setScreen(new GameScreen(this));
+
+		Gdx.app.debug("HELLO", "HEKALJ EKJ ");
 	}
 
 	@Override
