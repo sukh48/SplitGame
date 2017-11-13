@@ -11,12 +11,12 @@ import java.util.ArrayList;
 
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
+import ns.spacepirate.game.InputListener;
 import ns.spacepirate.game.components.CCollider;
 import ns.spacepirate.game.components.CDivideBall;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
 import ns.spacepirate.game.components.CVelocity;
-import ns.spacepirate.game.controllers.InputActionListener;
 import ns.spacepirate.game.controllers.PlayerCollisionHandler;
 import ns.spacepirate.game.editor.components.CTrail;
 
@@ -35,7 +35,8 @@ public class DivideEditorSystem extends IteratingSystem
     int count=-1;
     boolean start=false;
 
-    InputActionListener inputListener;
+    boolean firstTouch;
+
     ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
     ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
 
@@ -46,7 +47,8 @@ public class DivideEditorSystem extends IteratingSystem
         divideBallMap = ComponentMapper.getFor(CDivideBall.class);
         posMap = ComponentMapper.getFor(CPosition.class);
         velMap = ComponentMapper.getFor(CVelocity.class);
-        inputListener = InputActionListener.getInstance();
+
+        firstTouch = true;
     }
 
     @Override
@@ -74,6 +76,12 @@ public class DivideEditorSystem extends IteratingSystem
 
         entitiesToAdd.clear();
         entitiesToRemove.clear();
+
+        if(InputListener.touched && firstTouch) {
+            firstTouch = false;
+        }else if(!InputListener.touched) {
+            firstTouch = true;
+        }
     }
 
     @Override
@@ -82,7 +90,7 @@ public class DivideEditorSystem extends IteratingSystem
         CDivideBall divideBall = divideBallMap.get(entity);
         CPosition entityPos = posMap.get(entity);
 
-        if(inputListener.getState()==InputActionListener.FIRST_TOUCH  && divideBall.state==CDivideBall.SINGLE)
+        if(InputListener.touched && firstTouch && divideBall.state==CDivideBall.SINGLE)
         {
             CTexture cTexture = entity.getComponent(CTexture.class);
             Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
@@ -138,7 +146,7 @@ public class DivideEditorSystem extends IteratingSystem
         }
 
 
-        boolean pressed=inputListener.getState()==InputActionListener.PRESSED;
+        boolean pressed= InputListener.touched;
 
         if(divideBall.applyForce && divideBall.state==CDivideBall.SINGLE)
         {

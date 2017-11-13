@@ -2,22 +2,17 @@ package ns.spacepirate.game.desktop.editor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import ns.spacepirate.game.editor.LevelSector;
 import ns.spacepirate.game.editor.Sandbox;
-import ns.spacepirate.game.utils.GameSector;
 
 /**
  * Created by sukhmac on 17-11-11.
@@ -30,18 +25,14 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
     JButton loadButton;
     JButton resetPlayerButton;
 
+    JButton createModeButton;
+    JButton editModeButton;
+
     Controller controller;
-    Sandbox sandbox;
 
     public EditorPanel(Controller controller)
     {
         super();
-
-//        DefaultMutableTreeNode top =
-//                new DefaultMutableTreeNode("The Java Series");
-//        createNodes(top);
-//        JTree tree = new JTree(top);
-//        JScrollPane scrollPane = new JScrollPane(tree);
 
         this.controller = controller;
 
@@ -66,6 +57,14 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
         resetPlayerButton.addActionListener(this);
         resetPlayerButton.setActionCommand("Reset");
 
+        createModeButton = new JButton("Create");
+        createModeButton.addActionListener(this);
+        createModeButton.setActionCommand("Create");
+
+        editModeButton = new JButton("Edit");
+        editModeButton.addActionListener(this);
+        editModeButton.setActionCommand("Edit");
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         add(scrollPane);
@@ -73,12 +72,13 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
         add(loadButton);
         add(saveButton);
         add(resetPlayerButton);
+        add(createModeButton);
+        add(editModeButton);
     }
 
     public void updateLevelList(String list[])
     {
         levelList.setListData(list);
-
     }
 
     @Override
@@ -92,6 +92,10 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
             controller.createNewLevel();
         }else if(e.getActionCommand().equalsIgnoreCase("Save")) {
             controller.save();
+        }else if(e.getActionCommand().equalsIgnoreCase("Edit")) {
+            controller.setMode(Sandbox.MODE_EDIT);
+        }else if(e.getActionCommand().equalsIgnoreCase("Create")) {
+            controller.setMode(Sandbox.MODE_CREATE);
         }
     }
 
@@ -107,19 +111,4 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
 
     }
 
-    public Sandbox getSandbox()
-    {
-        return sandbox;
-    }
-
-//    private void createNodes(DefaultMutableTreeNode top) {
-//        DefaultMutableTreeNode category = null;
-//        DefaultMutableTreeNode book = null;
-//
-//        category = new DefaultMutableTreeNode("Books for Java Programmers");
-//        top.add(category);
-//
-//        category = new DefaultMutableTreeNode("Test 2");
-//        top.add(category);
-//    }
 }

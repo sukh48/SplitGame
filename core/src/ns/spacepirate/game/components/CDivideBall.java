@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Pool;
 
-import ns.spacepirate.game.controllers.InputActionListener;
-
 /**
  * Created by sukhmac on 2017-10-26.
  */

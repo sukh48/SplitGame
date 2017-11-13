@@ -180,4 +180,8 @@ public class Controller
     {
         sandbox.resetPlayer();
     }
+
+    public void setMode(int mode) {
+        sandbox.setMode(mode);
+    }
 }

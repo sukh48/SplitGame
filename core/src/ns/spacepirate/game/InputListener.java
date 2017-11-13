@@ -6,8 +6,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import ns.spacepirate.game.controllers.InputActionListener;
-
 /**
  * Created by sukhmac on 2016-02-06.
  */
@@ -15,9 +13,10 @@ public class InputListener implements InputProcessor
 {
 
     public static boolean touched=false;
-    public static boolean firstTouch=false;
-
     public static Vector2 touchedPos = new Vector2();
+
+    public static boolean dragged=false;
+    public static Vector2 dragPos = new Vector2();
 
     //public static Vector2 touchV = new Vector2();
 
@@ -38,7 +37,8 @@ public class InputListener implements InputProcessor
         cam.unproject(vector3);
         touchedPos.set(vector3.x, vector3.y);
 
-        System.out.println("X: "+vector3.x+" y: "+vector3.y);
+        System.out.println("TOUCH DOWN X: "+vector3.x+" y: "+vector3.y);
+
 
         return touched;
     }
@@ -47,12 +47,22 @@ public class InputListener implements InputProcessor
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
         touched = false;
+        dragged = false;
+        System.out.println("TOUCH UP");
         return touched;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
+        dragged=true;
+        Vector3 vector3 = new Vector3();
+        vector3.set(screenX, screenY, 0);
+        cam.unproject(vector3);
+        dragPos.set(vector3.x, vector3.y);
+
+        //System.out.println("DRAGGED: X"+dragPos.x+" Y: "+dragPos.y);
+
         return false;
     }
 
