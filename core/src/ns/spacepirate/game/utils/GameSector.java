@@ -9,21 +9,27 @@ import java.util.ArrayList;
  */
 public class GameSector
 {
-    public static final int MAX_OBJ = 10;
+    public static final int MAX_OBJ = 50;
 
-    private ArrayList<Vector2> obj;
+    public static final int TYPE_OBSTACLE = 0;
+    public static final int TYPE_COIN = 1;
+
+    private ArrayList<GameObj> obj;
 
     public GameSector()
     {
-        obj = new ArrayList<Vector2>(MAX_OBJ);
+        obj = new ArrayList<GameObj>(MAX_OBJ);
     }
 
-    public void addObj(float x, float y)
+    public void addObj(float x, float y, int type)
     {
-        obj.add(new Vector2(x,y));
+        GameObj gameObj = new GameObj();
+        gameObj.pos = new Vector2(x,y);
+        gameObj.type = type;
+        obj.add(gameObj);
     }
 
-    public ArrayList<Vector2> getObjs()
+    public ArrayList<GameObj> getObjs()
     {
         return obj;
     }

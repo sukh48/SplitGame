@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CBackground;
 import ns.spacepirate.game.components.CTexture;
@@ -20,20 +21,29 @@ import ns.spacepirate.game.components.CPosition;
 
 public class RenderingSystem extends IteratingSystem
 {
-    ComponentMapper<CPosition> posMap;
-    ComponentMapper<CTexture> graphicsMap;
+    private ComponentMapper<CPosition> posMap;
+    private ComponentMapper<CTexture> graphicsMap;
 
     private SpriteBatch batch;
     private Camera camera;
 
-    public RenderingSystem(CameraSystem cameraSystem)
+    Camera hudCam;
+    int count;
+    float timeElap;
+
+    public RenderingSystem(Camera camera)
     {
         super(Family.all(CPosition.class, CTexture.class).exclude(CBackground.class).get());
-        this.batch = new SpriteBatch();
-        this.camera = cameraSystem.camera;
 
-        posMap = ComponentMapper.getFor(CPosition.class);
-        graphicsMap = ComponentMapper.getFor(CTexture.class);
+        this.batch = new SpriteBatch();
+        this.camera = camera;
+
+        this.hudCam = new OrthographicCamera(camera.viewportWidth, camera.viewportHeight);
+        this.hudCam.position.set(SpacePirate.V_WIDTH/2f, SpacePirate.V_HEIGHT/2f, 0);
+        hudCam.update();
+
+        this.posMap = ComponentMapper.getFor(CPosition.class);
+        this.graphicsMap = ComponentMapper.getFor(CTexture.class);
     }
 
     @Override
@@ -58,6 +68,16 @@ public class RenderingSystem extends IteratingSystem
 
         batch.end();
 
+        batch.setProjectionMatrix(hudCam.combined);
+        batch.begin();
+        Assets.inst.getBigFont().draw(batch, ""+getEntities().size(), 50, 1230);
+        batch.end();
+
+        timeElap += deltaTime;
+        if(timeElap > 1) {
+            count++;
+            timeElap=0;
+        }
     }
 
     @Override

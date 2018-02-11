@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
 import ns.spacepirate.game.InputListener;
-import ns.spacepirate.game.components.CCollider;
+import ns.spacepirate.game.components.Collision.CCollider;
 import ns.spacepirate.game.components.CDivideBall;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
 import ns.spacepirate.game.components.CVelocity;
-import ns.spacepirate.game.controllers.PlayerCollisionHandler;
+import ns.spacepirate.game.handlers.PlayerCollisionHandler;
 import ns.spacepirate.game.editor.components.CTrail;
 
 /**
@@ -25,20 +25,17 @@ import ns.spacepirate.game.editor.components.CTrail;
  */
 public class DivideEditorSystem extends IteratingSystem
 {
-    ComponentMapper<CDivideBall> divideBallMap;
-    ComponentMapper<CPosition> posMap;
-    ComponentMapper<CVelocity> velMap;
+    private ComponentMapper<CDivideBall> divideBallMap;
+    private ComponentMapper<CPosition> posMap;
+    private ComponentMapper<CVelocity> velMap;
 
-    Engine engine;
-    Brahma creator;
+    private Engine engine;
+    private Brahma creator;
 
-    int count=-1;
-    boolean start=false;
+    private boolean firstTouch;
 
-    boolean firstTouch;
-
-    ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
-    ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
+    private ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
+    private ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
 
     public DivideEditorSystem(Brahma creator)
     {
@@ -61,10 +58,6 @@ public class DivideEditorSystem extends IteratingSystem
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
-        if (start) {
-            count += 1;
-        }
 
         for(Entity e : entitiesToAdd) {
             engine.addEntity(e);
@@ -93,8 +86,8 @@ public class DivideEditorSystem extends IteratingSystem
         if(InputListener.touched && firstTouch && divideBall.state==CDivideBall.SINGLE)
         {
             CTexture cTexture = entity.getComponent(CTexture.class);
-            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
-            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
+            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity, 10);
+            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity, 10);
 
             ballLeft.add(new CTrail());
             ballRight.add(new CTrail());
@@ -111,8 +104,6 @@ public class DivideEditorSystem extends IteratingSystem
 
             entity.remove(CTexture.class);
             entity.remove(CCollider.class);
-
-            start=true;
         }
 
         boolean destroy=false;
@@ -137,10 +128,10 @@ public class DivideEditorSystem extends IteratingSystem
                 graphicsComponent.sprite.setOriginCenter();
                 divideBall.parent.add(graphicsComponent);
 
-                CCollider colliderComponent = new CCollider();
-                colliderComponent.rect.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
-                colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
-                divideBall.parent.add(colliderComponent);
+//                CCollider colliderComponent = new CCollider();
+//                colliderComponent.rect.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
+//                colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+//                divideBall.parent.add(colliderComponent);
                 divideBall.parent.add(new CTrail());
             }
         }

@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import ns.spacepirate.game.editor.Sandbox;
+import ns.spacepirate.game.utils.GameSector;
 
 /**
  * Created by sukhmac on 17-11-11.
@@ -24,8 +25,10 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
     JButton saveButton;
     JButton loadButton;
     JButton resetPlayerButton;
+    JButton playButton;
 
-    JButton createModeButton;
+    JButton obstacleButton;
+    JButton coinButton;
     JButton editModeButton;
 
     Controller controller;
@@ -57,13 +60,21 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
         resetPlayerButton.addActionListener(this);
         resetPlayerButton.setActionCommand("Reset");
 
-        createModeButton = new JButton("Create");
-        createModeButton.addActionListener(this);
-        createModeButton.setActionCommand("Create");
+        obstacleButton = new JButton("Obstacle");
+        obstacleButton.addActionListener(this);
+        obstacleButton.setActionCommand("Obstacle");
+
+        coinButton = new JButton("Coin");
+        coinButton.addActionListener(this);
+        coinButton.setActionCommand("Coin");
 
         editModeButton = new JButton("Edit");
         editModeButton.addActionListener(this);
         editModeButton.setActionCommand("Edit");
+
+        playButton = new JButton("Play");
+        playButton.addActionListener(this);
+        playButton.setActionCommand("Play");
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -72,8 +83,10 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
         add(loadButton);
         add(saveButton);
         add(resetPlayerButton);
-        add(createModeButton);
+        add(obstacleButton);
+        add(coinButton);
         add(editModeButton);
+        add(playButton);
     }
 
     public void updateLevelList(String list[])
@@ -94,8 +107,14 @@ public class EditorPanel extends JPanel implements ActionListener, ListSelection
             controller.save();
         }else if(e.getActionCommand().equalsIgnoreCase("Edit")) {
             controller.setMode(Sandbox.MODE_EDIT);
-        }else if(e.getActionCommand().equalsIgnoreCase("Create")) {
+        }else if(e.getActionCommand().equalsIgnoreCase("Obstacle")) {
             controller.setMode(Sandbox.MODE_CREATE);
+            controller.setCreateType(GameSector.TYPE_OBSTACLE);
+        }else if(e.getActionCommand().equalsIgnoreCase("Coin")) {
+            controller.setMode(Sandbox.MODE_CREATE);
+            controller.setCreateType(GameSector.TYPE_COIN);
+        }else if(e.getActionCommand().equalsIgnoreCase("Play")) {
+            controller.setMode(Sandbox.MODE_PLAY);
         }
     }
 

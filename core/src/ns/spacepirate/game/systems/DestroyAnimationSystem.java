@@ -6,7 +6,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import ns.spacepirate.game.components.*;
+
+import ns.spacepirate.game.components.CAnimation;
+import ns.spacepirate.game.components.CDestroy;
+import ns.spacepirate.game.components.CTweenEffect;
 
 public class DestroyAnimationSystem extends IteratingSystem
 {
@@ -60,6 +63,7 @@ public class DestroyAnimationSystem extends IteratingSystem
             tweenEnd = true;
         }else if(tweenEffect!=null && tweenEffect.tweeningState==CTweenEffect.END) {
             tweenEnd = true;
+            System.out.println("DESTROY");
         }else if(tweenEffect==null) {
             entity.add(new CTweenEffect());
         }
@@ -70,6 +74,8 @@ public class DestroyAnimationSystem extends IteratingSystem
             {
                 animComponent.set(CAnimation.ANIM_DESTROYED);
             }
+
+            System.out.println("REMOVED");
             engine.removeEntity(entity);
         }
     }

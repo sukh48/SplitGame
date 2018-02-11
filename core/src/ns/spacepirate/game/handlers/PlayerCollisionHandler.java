@@ -1,16 +1,14 @@
-package ns.spacepirate.game.controllers;
+package ns.spacepirate.game.handlers;
 
-import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.audio.Sound;
 
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.components.CDestroy;
 import ns.spacepirate.game.components.CTag;
-import ns.spacepirate.game.components.CTweenEffect;
 import ns.spacepirate.game.components.CVelocity;
 import ns.spacepirate.game.interfaces.CollisionHandler;
-import ns.spacepirate.game.tween.TweenEffectAccessor;
+import ns.spacepirate.game.tween.TweenTextureAccessor;
 
 /**
  * Created by sukhmac on 2016-02-12.
@@ -46,7 +44,7 @@ public class PlayerCollisionHandler implements CollisionHandler
                 }
 
                 CDestroy destroyComponent = new CDestroy();
-                destroyComponent.addTweenEffect(TweenEffectAccessor.EFFECT_BOUNCE);
+                destroyComponent.addTweenEffect(TweenTextureAccessor.EFFECT_BOUNCE);
                 collidedWith.add(destroyComponent);
 
                 waterSound.stop();

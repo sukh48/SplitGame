@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import ns.spacepirate.game.components.CBackground;
@@ -25,11 +24,11 @@ public class BackgroundRenderSystem extends IteratingSystem
     private Camera camera;
 
 
-    public BackgroundRenderSystem(CameraSystem cameraSystem)
+    public BackgroundRenderSystem(Camera camera)
     {
         super(Family.all(CPosition.class, CTexture.class, CBackground.class).get());
         this.batch = new SpriteBatch();
-        this.camera = cameraSystem.camera;
+        this.camera = camera;
 
         posMap = ComponentMapper.getFor(CPosition.class);
         graphicsMap = ComponentMapper.getFor(CTexture.class);

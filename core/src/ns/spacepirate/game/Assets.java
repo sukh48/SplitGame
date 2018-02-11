@@ -3,6 +3,7 @@ package ns.spacepirate.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,7 +25,7 @@ public class Assets
 
 	public static final String SOUND = "music/waterblub.mp3";
 
-	public static final String F_FONT_PATH = "fonts/computer_pixel-7.ttf";
+	public static final String F_FONT_PATH = "fonts/GAMECUBEN DualSet.ttf";
 	
 	public static final Assets inst = new Assets();
 
@@ -65,10 +66,10 @@ public class Assets
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(F_FONT_PATH));
         FreeTypeFontGenerator.FreeTypeFontParameter params = new FreeTypeFontGenerator.FreeTypeFontParameter();
         params.size=30;
-        params.color= Color.WHITE;
+        params.color= Color.RED;
         font30 = generator.generateFont(params);
-        params.size=60;
-        font60 = generator.generateFont(params);        
+        params.size=90;
+        font60 = generator.generateFont(params);
     }
 	
 	public Sound getSound(String sound)

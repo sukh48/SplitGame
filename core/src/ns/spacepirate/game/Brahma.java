@@ -1,36 +1,31 @@
 package ns.spacepirate.game;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+
 import ns.spacepirate.game.components.*;
-import ns.spacepirate.game.controllers.AsteroidCollisionHandler;
-import ns.spacepirate.game.controllers.BubbleCollisionHandler;
-import ns.spacepirate.game.controllers.PlayerCollisionHandler;
+import ns.spacepirate.game.components.Collision.BoxCollider;
+import ns.spacepirate.game.components.Collision.CCollider;
+import ns.spacepirate.game.components.Collision.CircleCollider;
 
 /**
  * Created by sukhmac on 2016-02-11.
  */
 public class Brahma
 {
-    PooledEngine engine;
-
-    TextureRegion bulletTexture;
-    TextureRegion[] bubblePopFrames;
-
-    TextureRegion asteroidTex;
-    TextureRegion[] asteroidBlastFrames;
-
-    TextureRegion[] playerFlyFrames;
+    private PooledEngine engine;
+    private GameWorld world;
 
     public Brahma(PooledEngine engine)
     {
         this.engine = engine;
+    }
+
+    public GameWorld createWorld()
+    {
+        this.world = new GameWorld(this);
+        return world;
     }
 
     public Entity createTrail(float x, float y)
@@ -59,9 +54,10 @@ public class Brahma
 
     public Entity createPlayer()
     {
+        Entity player = engine.createEntity();
+
         TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball3");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
-        CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
         CDivideBall divideComponent = engine.createComponent(CDivideBall.class);
@@ -76,20 +72,18 @@ public class Brahma
         posComponent.x = SpacePirate.V_WIDTH/2;//-width/2;
         posComponent.y = SpacePirate.V_HEIGHT/2;//-height/2;
 
-        velComponent.vel.set(0,4.5f);
+        velComponent.vel.set(0,0);//4.5f);
         graphicsComponent.sprite.setRegion(playerTex);
         graphicsComponent.sprite.setSize(width, height);
         graphicsComponent.sprite.setCenter(playerTex.getRegionWidth()/4f, playerTex.getRegionHeight()/4f);
         graphicsComponent.sprite.setOriginCenter();
 
-        colliderComponent.rect.setSize(playerTex.getRegionWidth()/2f, playerTex.getRegionHeight()/2f);
-        colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+        CCollider colliderComponent = new CCollider();
+        colliderComponent.setCollider(new CircleCollider(20f));
 
-        Entity player = engine.createEntity();
         player.add(posComponent);
         player.add(velComponent);
         player.add(engine.createComponent(CPlayerInput.class));
-        player.add(engine.createComponent(CShoot.class));
         player.add(colliderComponent);
         player.add(graphicsComponent);
         player.add(divideComponent);
@@ -98,11 +92,12 @@ public class Brahma
         return player;
     }
 
-    public Entity createBall(int dir, float x, float y, float w, float h, Entity parent)
+    public Entity createBall(int dir, float x, float y, float w, float h, Entity parent, float r)
     {
+        Entity ball = engine.createEntity();
+
         TextureRegion ballTex = Assets.inst.getSpriteTexture("Ball3");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
-        CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
         CDivideBall divideComponent = engine.createComponent(CDivideBall.class);
@@ -110,7 +105,10 @@ public class Brahma
         divideComponent.applyForce=true;
         divideComponent.parent=parent;
         divideComponent.attSpeed=0.5f/2f;
-        divideComponent.speed=5f/4  ;
+        divideComponent.speed=5f/4 ;
+
+//        divideComponent.attSpeed=0.5f/4f;
+//        divideComponent.speed=5f/6;
 
         CTag tagComponent = engine.createComponent(CTag.class);
         tagComponent.tag = "Ball";
@@ -124,10 +122,9 @@ public class Brahma
 //        graphicsComponent.sprite.setCenter(ballTex.getRegionWidth() / 4f, ballTex.getRegionHeight() / 4f);
 //        graphicsComponent.sprite.setOriginCenter();
 
-        colliderComponent.rect.setSize(w,h);
-        colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+        CCollider colliderComponent = new CCollider();
+        colliderComponent.setCollider(new CircleCollider(r));
 
-        Entity ball = engine.createEntity();
         ball.add(tagComponent);
         ball.add(posComponent);
         ball.add(velComponent);
@@ -140,9 +137,10 @@ public class Brahma
 
     public Entity createCoin(float x, float y)
     {
+        Entity coin = engine.createEntity();
+
         TextureRegion coinTex = Assets.inst.getSpriteTexture("Coin7");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
-        CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
 
@@ -159,9 +157,9 @@ public class Brahma
         graphicsComponent.sprite.setCenter(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
         graphicsComponent.sprite.setOriginCenter();
 
-        colliderComponent.rect.setSize(coinTex.getRegionWidth() / 2f, coinTex.getRegionHeight() / 2f);
+        CCollider colliderComponent = new CCollider();
+        colliderComponent.setCollider(new CircleCollider(20));
 
-        Entity coin = engine.createEntity();
         coin.add(tagComponent);
         coin.add(posComponent);
         coin.add(velComponent);
@@ -173,9 +171,10 @@ public class Brahma
 
     public Entity createObstacle(float x, float y, float width, float height)
     {
+        Entity box = engine.createEntity();
+
         TextureRegion coinTex = Assets.inst.getSpriteTexture("Block5");
         CTexture graphicsComponent = engine.createComponent(CTexture.class);
-        CCollider colliderComponent = engine.createComponent(CCollider.class);
         CPosition posComponent = engine.createComponent(CPosition.class);
         CVelocity velComponent = engine.createComponent(CVelocity.class);
 
@@ -192,16 +191,21 @@ public class Brahma
 //        graphicsComponent.sprite.setCenter(width/2, height/2);
 //        graphicsComponent.sprite.setOriginCenter();
 
-        colliderComponent.rect.setSize(width,height);
+        CCollider colliderComponent = new CCollider();
+        colliderComponent.setCollider(new BoxCollider(width-15, height-15));
 
-        Entity coin = engine.createEntity();
-        coin.add(tagComponent);
-        coin.add(posComponent);
-        coin.add(velComponent);
-        coin.add(colliderComponent);
-        coin.add(graphicsComponent);
+        box.add(tagComponent);
+        box.add(posComponent);
+        box.add(velComponent);
+        box.add(colliderComponent);
+        box.add(graphicsComponent);
 
-        return coin;
+        return box;
+    }
+
+    public void addToEngine(Entity entity)
+    {
+        engine.addEntity(entity);
     }
 
 }

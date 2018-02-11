@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,35 +21,13 @@ public class LevelParser
 {
     public static ArrayList<GameSector> parse()
     {
-//        JsonReader json = new JsonReader();
-//        JsonValue root = json.parse(Gdx.files.internal("levels/level1.json"));
-//        System.out.println(root);
-//
-//        JsonValue levels = root.get("levels");
-//        Iterator i = levels.iterator();
-//        GameSector sectors[] = new GameSector[levels.size];
-//        int currIndex=0;
-//        while(i.hasNext()) {
-//            JsonValue level = (JsonValue)i.next();
-//            JsonValue objs = level.get("Objs");
-//
-//            sectors[currIndex] = new GameSector();
-//
-//            Iterator objIter = objs.iterator();
-//            while (objIter.hasNext()) {
-//                JsonValue obj = (JsonValue)objIter.next();
-//                sectors[currIndex].addObj(obj.getFloat("x"), obj.getFloat("y"));
-//            }
-//
-//            currIndex++;
-//            System.out.println(objs.size);
-//        }
-//
-//        System.out.println("Success");
-        ArrayList<GameSector> sectorList = new ArrayList<GameSector>(10);
+        ArrayList<GameSector> sectorList = new ArrayList<GameSector>(50);
 
         try {
-            InputStream is = new FileInputStream(Gdx.files.internal("levels/level2.json").file());
+            FileHandle file = Gdx.files.internal("levels/level2.json");
+
+            Gdx.app.debug("FILE: ", file.toString());
+            InputStream is = file.read();
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
             String line = buf.readLine();
             StringBuilder sb = new StringBuilder();
@@ -67,7 +46,7 @@ public class LevelParser
             is.close();
 
         }catch (Exception e) {
-
+            Gdx.app.error("ERROR", e.getMessage());
         }
 
         return sectorList;

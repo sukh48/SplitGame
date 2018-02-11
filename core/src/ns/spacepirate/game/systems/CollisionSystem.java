@@ -5,25 +5,34 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Shape2D;
+
+import ns.spacepirate.game.GameWorld;
 import ns.spacepirate.game.components.*;
+import ns.spacepirate.game.components.Collision.BoxCollider;
+import ns.spacepirate.game.components.Collision.CCollider;
+import ns.spacepirate.game.components.Collision.Collider;
 
 /**
  * Created by sukhmac on 2016-02-06.
  */
 public class CollisionSystem extends IteratingSystem
 {
-    Engine engine;
+    private Engine engine;
+    private GameWorld world;
 
-    ComponentMapper<CPosition> posMap;
-    ComponentMapper<CCollider> boundsMap;
-    ComponentMapper<CRange> rangeMap;
+    private ComponentMapper<CPosition> posMap;
+    private ComponentMapper<CCollider> boundsMap;
+    private ComponentMapper<CRange> rangeMap;
 
-    public CollisionSystem()
+    public CollisionSystem(GameWorld world)
     {
         super(Family.all(CPosition.class, CCollider.class).get());
         boundsMap = ComponentMapper.getFor(CCollider.class);
         posMap = ComponentMapper.getFor(CPosition.class);
         rangeMap = ComponentMapper.getFor(CRange.class);
+
+        this.world = world;
     }
 
     @Override
@@ -37,55 +46,56 @@ public class CollisionSystem extends IteratingSystem
     protected void processEntity(Entity entity, float deltaTime)
     {
         CCollider entityCollider = boundsMap.get(entity);
-        CPosition entityPos  = posMap.get(entity);
-        CRange rangeComponent = rangeMap.get(entity);
+        Collider collider = entityCollider.getCollider();
+        CPosition pos1 = posMap.get(entity);
 
-        boolean collided=false;
+        if(collider instanceof BoxCollider) {
+            BoxCollider boxCollider = (BoxCollider) collider;
+            entityCollider.setPosition(pos1.x-boxCollider.getBounds().width/2, pos1.y-boxCollider.getBounds().height/2);
+            //entityCollider.setPosition(pos1.x, pos1.y);
+        }else {
+            entityCollider.setPosition(pos1.x, pos1.y);
+        }
 
-        entityCollider.rect.setPosition(entityPos.x, entityPos.y);
-        entityCollider.rect.setSize(50,50);
         for (Entity otherEntity : getEntities())
         {
             if(entity!=otherEntity)
             {
-                CPosition otherEntityPos = posMap.get(otherEntity);
                 CCollider otherCollider = boundsMap.get(otherEntity);
+                Collider collider2 = otherCollider.getCollider();
 
-                otherCollider.rect.setPosition(otherEntityPos.x,
-                                               otherEntityPos.y);
-
-                if(entityCollider.rect.overlaps(otherCollider.rect))
-                {
-                    if(entityCollider.hasCollisionHandler())
-                    {
-                        /* notify collision */
-                        entityCollider.getHandler().notifyCollision(entity, otherEntity);
-                        entityCollider.collision=true;
-                        collided = true;
-                    }
+                CPosition pos2 = posMap.get(otherEntity);
+                if(collider2 instanceof BoxCollider) {
+                    BoxCollider boxCollider = (BoxCollider) collider2;
+                    otherCollider.setPosition(pos2.x-boxCollider.getBounds().width/2, pos2.y-boxCollider.getBounds().height/2);
+                    //otherCollider.setPosition(pos2.x, pos2.y);
+                }else {
+                    otherCollider.setPosition(pos2.x, pos2.y);
                 }
 
-                if(rangeComponent!=null)
+                if(!entityCollider.isAlreadyColliding(otherEntity))
                 {
-                    rangeComponent.rangeBounds.setPosition(entityPos.x, entityPos.y);
-
-                    if(rangeComponent.rangeBounds.contains(otherCollider.rect.getX(), otherCollider.rect.getY()))
-                    {
-                        if(otherEntity.getComponent(CPlayerInput.class)!=null)
-                        {
-                            rangeComponent.addEntityInRange(otherEntity);
-                        }
+                    if(entityCollider.collides(otherCollider)) {
+                        //System.out.println("COLLISION");
+                        entityCollider.collision = true;
+                        entityCollider.addColliding(otherEntity);
+                        world.notifyCollision(entity, otherEntity);
                     }
+                }else if(!entityCollider.collides(otherCollider)) {
+                    entityCollider.removeColliding(otherEntity);
                 }
             }
         }
 
         /* notify collision end */
-        if(entityCollider.hasCollisionHandler())
-        {
-            if(entityCollider.collision && !collided) {
-                entityCollider.getHandler().notifyCollisionEnd(entity);
-            }
-        }
+        //if(entityCollider.hasCollisionHandler())
+        //{
+//            if(entityCollider.collision && !collided)
+//            {
+//                //entityCollider.getHandler().notifyCollisionEnd(entity);
+//                entityCollider.collision=false;
+//                world.notifyCollisionEnd(entity);
+//            }
+        //}
     }
 }

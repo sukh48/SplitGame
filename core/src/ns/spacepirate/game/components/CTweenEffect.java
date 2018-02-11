@@ -29,5 +29,6 @@ public class CTweenEffect extends Component implements Pool.Poolable, TweenCallb
     public void onEvent(int type, BaseTween<?> source)
     {
         tweeningState=END;
+        System.out.println("TWEEN END");
     }
 }

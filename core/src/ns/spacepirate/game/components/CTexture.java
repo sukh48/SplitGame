@@ -20,5 +20,6 @@ public class CTexture extends Component implements Pool.Poolable
     {
         sprite.setTexture(null);
         sprite.setColor(Color.WHITE);
+        sprite.setAlpha(1);
     }
 }

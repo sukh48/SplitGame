@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import ns.spacepirate.game.Brahma;
-import ns.spacepirate.game.editor.LevelSector;
+import ns.spacepirate.game.components.CTag;
 import ns.spacepirate.game.editor.Sandbox;
+import ns.spacepirate.game.utils.GameObj;
 import ns.spacepirate.game.utils.GameSector;
 
 /**
@@ -71,24 +72,11 @@ public class Controller
 
     public void save()
     {
-//        try {
-//
-//            FileWriter writer = new FileWriter(Gdx.files.internal("levels/level1.json").path());
-//            JsonWriter json = new JsonWriter(writer);
-//            JsonValue root = json.
-//
-//            for (GameSector sector : sectorList) {
-//                root.remove("levels");
-//            }
-//        }catch (Exception e) {
-//
-//        }
-
-        ArrayList<Vector2> entities = sandbox.getEntities();
+        ArrayList<GameObj> entities = sandbox.getEntities();
         GameSector sector = sectorList.get(selectedLevel);
         sector.clearObs();
-        for(Vector2 e : entities) {
-            sector.addObj(e.x, e.y);
+        for(GameObj e : entities) {
+            sector.addObj(e.pos.x, e.pos.y, e.type);
         }
 
         Json json = new Json();
@@ -108,42 +96,6 @@ public class Controller
 
     public void loadLevels()
     {
-//        JsonReader json = new JsonReader();
-//        JsonValue root = json.parse(Gdx.files.internal("levels/level1.json"));
-//        System.out.println(root);
-//
-//        JsonValue levels = root.get("levels");
-//        Iterator i = levels.iterator();
-//        //LevelSector sectors[] = new LevelSector[levels.size];
-//
-//        String levelNames[] = new String[levels.size];
-//
-//        int currIndex=0;
-//        while(i.hasNext()) {
-//            JsonValue level = (JsonValue)i.next();
-//            JsonValue objs = level.get("Objs");
-//
-//            GameSector sector = new GameSector();
-//
-//            Iterator objIter = objs.iterator();
-//            while (objIter.hasNext()) {
-//                JsonValue obj = (JsonValue)objIter.next();
-//                System.out.println(obj.getFloat("x"));
-//                //Entity entity = creator.createObstacle(obj.getFloat("x"), obj.getFloat("y"), 50, 50);
-//                sector.addObj(obj.getFloat("x"), obj.getFloat("y"));
-//            }
-//
-//            sectorList.add(sector);
-//
-//            levelNames[currIndex]="lvl"+currIndex;
-//            currIndex++;
-//            System.out.println(objs.size);
-//        }
-//
-//        System.out.println("Success");
-//
-//        editorPanel.updateLevelList(levelNames);
-
         try {
             InputStream is = new FileInputStream(Gdx.files.internal("levels/level2.json").file());
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
@@ -183,5 +135,10 @@ public class Controller
 
     public void setMode(int mode) {
         sandbox.setMode(mode);
+    }
+
+    public void setCreateType(int type)
+    {
+        sandbox.setCreateType(type);
     }
 }

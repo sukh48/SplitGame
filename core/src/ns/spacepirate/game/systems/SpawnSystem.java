@@ -3,10 +3,10 @@ package ns.spacepirate.game.systems;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 
 import ns.spacepirate.game.Brahma;
+import ns.spacepirate.game.GameWorld;
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CVelocity;
@@ -16,23 +16,25 @@ import ns.spacepirate.game.components.CVelocity;
  */
 public class SpawnSystem extends EntitySystem
 {
-    Engine engine;
+    private Engine engine;
 
-    Entity player;
-    CPosition playerPos;
-    CVelocity playerVel;
+    private Entity player;
+    private CPosition playerPos;
+    private CVelocity playerVel;
 
-    Brahma creator;
-    float distMoved;
+    private Brahma creator;
+    private float distMoved;
 
-    boolean obstacleFlag;
+    private boolean obstacleFlag;
 
-    public SpawnSystem(Entity player, Brahma creator)
+    public SpawnSystem(GameWorld world)
     {
-        distMoved=0;
-        playerPos = player.getComponent(CPosition.class);
-        playerVel = player.getComponent(CVelocity.class);
-        this.creator = creator;
+        this.distMoved=0;
+        this.player = world.getPlayer();
+        this.creator = world.getCreator();
+
+        this.playerPos = player.getComponent(CPosition.class);
+        this.playerVel = player.getComponent(CVelocity.class);
     }
 
     @Override
@@ -41,7 +43,7 @@ public class SpawnSystem extends EntitySystem
 
         this.engine = engine;
 
-        generateCoins();
+        generateObstacles();
         obstacleFlag=true;
     }
 

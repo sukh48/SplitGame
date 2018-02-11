@@ -40,6 +40,7 @@ import ns.spacepirate.game.systems.RenderingSystem;
 import ns.spacepirate.game.systems.ShapeRenderingSystem;
 import ns.spacepirate.game.systems.SpawnSystem;
 import ns.spacepirate.game.systems.TweenSystem;
+import ns.spacepirate.game.utils.GameObj;
 import ns.spacepirate.game.utils.GameSector;
 
 /**
@@ -53,6 +54,7 @@ public class Sandbox implements ApplicationListener
     public static final int MODE_CREATE=0;
     public static final int MODE_DELETE=1;
     public static final int MODE_EDIT=2;
+    public static final int MODE_PLAY=3;
 
     SpriteBatch batch;
     OrthographicCamera cam;
@@ -63,13 +65,14 @@ public class Sandbox implements ApplicationListener
     Entity player;
 
     int currMode;
+    int creatingType;
 
     public Sandbox()
     {
         engine = new PooledEngine();
         creator = new Brahma(engine);
 
-        this.currMode = MODE_EDIT;
+        setMode(MODE_EDIT);
         //this.controller = controller;
     }
 
@@ -91,34 +94,59 @@ public class Sandbox implements ApplicationListener
         init();
     }
 
+    public void setCreateType(int type)
+    {
+        creatingType = type;
+    }
+
+    public int getCreatingType()
+    {
+        return creatingType;
+    }
+
     private void init()
     {
-        player = creator.createPlayer();
-        CVelocity velocityComp = player.getComponent(CVelocity.class);
-        player.add(new CTrail());
-        velocityComp.vel.setZero();
-        engine.addEntity(player);
+//        player = creator.createPlayer();
+//        CVelocity velocityComp = player.getComponent(CVelocity.class);
+//        player.add(new CTrail());
+//        velocityComp.vel.setZero();
+//        engine.addEntity(player);
 
         CameraSystem cameraSystem = new CameraSystem(cam);
         //cameraSystem.follow(player);
 
         engine.addSystem(cameraSystem);
         engine.addSystem(new MovementSystem());
-        engine.addSystem(new CollisionSystem());
+        //engine.addSystem(new CollisionSystem());
         engine.addSystem(new InputModeSystem(creator,this));
         engine.addSystem(new DivideEditorSystem(creator));
         engine.addSystem(new TrailSystem(0.2f, creator));
         //engine.addSystem(new BackgroundSystem(player, creator));
         //engine.addSystem(new BackgroundRenderSystem(cameraSystem));
         //engine.addSystem(new ShapeRenderingSystem(cameraSystem));
-        engine.addSystem(new RenderingSystem(cameraSystem));
-        engine.addSystem(new DebugRenderingSystem(cameraSystem));
+        engine.addSystem(new RenderingSystem(cameraSystem.getCamera()));
+        engine.addSystem(new DebugRenderingSystem(cameraSystem.getCamera()));
         //engine.addSystem(new ExpireSystem(cameraSystem));
     }
 
     public void setMode(int mode)
     {
         this.currMode = mode;
+
+        if(mode==MODE_PLAY) {
+            player = creator.createPlayer();
+            CVelocity velocityComp = player.getComponent(CVelocity.class);
+            player.add(new CTrail());
+
+            CPosition pos = player.getComponent(CPosition.class);
+            pos.y=-100;
+
+            engine.addEntity(player);
+        }else {
+            if(player!=null) {
+                engine.removeEntity(player);
+            }
+        }
     }
 
     public int getMode()
@@ -126,16 +154,24 @@ public class Sandbox implements ApplicationListener
         return currMode;
     }
 
-    public ArrayList<Vector2> getEntities()
+    public ArrayList<GameObj> getEntities()
     {
-        ArrayList<Vector2> entities = new ArrayList<Vector2>();
+        ArrayList<GameObj> entities = new ArrayList<GameObj>();
         for (Entity e : engine.getEntities())
         {
             CTag tag = e.getComponent(CTag.class);
             CPosition pos = e.getComponent(CPosition.class);
             if(tag.tag.equalsIgnoreCase("Block"))
             {
-                entities.add(new Vector2(pos.x, pos.y));
+                GameObj obj = new GameObj();
+                obj.pos.set(pos.x, pos.y);
+                obj.type = GameSector.TYPE_OBSTACLE;
+                entities.add(obj);
+            }else if(tag.tag.equalsIgnoreCase("Coin")) {
+                GameObj obj =  new GameObj();
+                obj.pos.set(pos.x, pos.y);
+                obj.type = GameSector.TYPE_COIN;
+                entities.add(obj);
             }
         }
 
@@ -172,31 +208,36 @@ public class Sandbox implements ApplicationListener
         {
             engine.removeEntity(e);
         }
-
-        CPosition pos = player.getComponent(CPosition.class);
-        pos.y=-100;
     }
 
-    private void addEntities(ArrayList<Vector2> objs) {
-        for(Vector2 obj : objs) {
+    private void addEntities(ArrayList<GameObj> objs) {
+        for(GameObj obj : objs) {
             //System.out.println("Entity added");
-            Entity e = creator.createObstacle(obj.x, obj.y, 50, 50);
-            engine.addEntity(e);
+            Entity e;
+            if(obj.type==GameSector.TYPE_OBSTACLE ) {
+                e = creator.createObstacle(obj.pos.x, obj.pos.y, 50, 50);
+            }else {
+                e = creator.createCoin(obj.pos.x, obj.pos.y);
+            }
+
+            if(e!=null) {
+                engine.addEntity(e);
+            }
         }
     }
 
     private void clearEntities() {
         engine.removeAllEntities();
 
-        player = creator.createPlayer();
-        CVelocity velocityComp = player.getComponent(CVelocity.class);
-        CPosition positionComp = player.getComponent(CPosition.class);
-
-        player.add(new CTrail());
-        //velocityComp.vel.setZero();
-        positionComp.x=V_WIDTH/2f;
-        positionComp.y=100;
-        engine.addEntity(player);
+//        player = creator.createPlayer();
+//        CVelocity velocityComp = player.getComponent(CVelocity.class);
+//        CPosition positionComp = player.getComponent(CPosition.class);
+//
+//        player.add(new CTrail());
+//        //velocityComp.vel.setZero();
+//        positionComp.x=V_WIDTH/2f;
+//        positionComp.y=100;
+//        engine.addEntity(player);
     }
 
     @Override

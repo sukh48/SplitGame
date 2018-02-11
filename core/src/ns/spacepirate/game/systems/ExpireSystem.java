@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Camera;
+
 import ns.spacepirate.game.SpacePirate;
 import ns.spacepirate.game.components.CBackground;
 import ns.spacepirate.game.components.CDivideBall;
@@ -15,15 +17,15 @@ import ns.spacepirate.game.components.CPosition;
  */
 public class ExpireSystem extends IteratingSystem
 {
-    Engine engine;
-    ComponentMapper<CPosition> posMap;
-    CameraSystem cameraSystem;
+    private Engine engine;
+    private ComponentMapper<CPosition> posMap;
+    private Camera camera;
 
-    public ExpireSystem(CameraSystem cameraSystem)
+    public ExpireSystem(Camera camera)
     {
         super(Family.all(CPosition.class).exclude(CBackground.class, CDivideBall.class).get());
-        posMap = ComponentMapper.getFor(CPosition.class);
-        this.cameraSystem = cameraSystem;
+        this.posMap = ComponentMapper.getFor(CPosition.class);
+        this.camera = camera;
     }
 
     @Override
@@ -37,8 +39,8 @@ public class ExpireSystem extends IteratingSystem
     protected void processEntity(Entity entity, float deltaTime)
     {
         CPosition posComponent = posMap.get(entity);
-        if(posComponent.x>cameraSystem.camera.position.x+SpacePirate.V_WIDTH   || posComponent.x<cameraSystem.camera.position.x-SpacePirate.V_WIDTH ||
-           posComponent.y>cameraSystem.camera.position.y+SpacePirate.V_HEIGHT*3  || posComponent.y<cameraSystem.camera.position.y-SpacePirate.V_HEIGHT )
+        if(posComponent.x>camera.position.x+SpacePirate.V_WIDTH   || posComponent.x<camera.position.x-SpacePirate.V_WIDTH ||
+           posComponent.y>camera.position.y+SpacePirate.V_HEIGHT*3  || posComponent.y<camera.position.y-SpacePirate.V_HEIGHT )
         {
             engine.removeEntity(entity);
         }

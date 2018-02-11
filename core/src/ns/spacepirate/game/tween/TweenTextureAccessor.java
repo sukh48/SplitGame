@@ -8,12 +8,12 @@ import ns.spacepirate.game.components.CTexture;
 /**
  * Created by slotey on 16-02-12.
  */
-public class TweenEffectAccessor implements TweenAccessor<CTexture>
+public class TweenTextureAccessor implements TweenAccessor<CTexture>
 {
     public static final int EFFECT_BOUNCE=0;
     public static final int EFFECT_FADE=1;
 
-    public TweenEffectAccessor()
+    public TweenTextureAccessor()
     {
     }
 

@@ -7,22 +7,21 @@ import com.badlogic.gdx.math.Vector2;
 
 import ns.spacepirate.game.Brahma;
 import ns.spacepirate.game.InputListener;
-import ns.spacepirate.game.components.CCollider;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.editor.Sandbox;
+import ns.spacepirate.game.utils.GameSector;
 
 /**
  * Created by sukhmac on 17-11-12.
  */
 public class InputModeSystem extends EntitySystem
 {
-    Sandbox sandbox;
-    Brahma creator;
-    Engine engine;
+    private Sandbox sandbox;
+    private Brahma creator;
+    private Engine engine;
 
-    boolean firstTouch;
-
-    Entity draggedEntity;
+    private boolean firstTouch;
+    private Entity draggedEntity;
 
     public InputModeSystem(Brahma creator, Sandbox sandbox)
     {
@@ -45,9 +44,21 @@ public class InputModeSystem extends EntitySystem
             if (InputListener.touched && firstTouch)
             {
                 firstTouch=false;
+                float offsetX = 10;
                 Vector2 touchedPoint = InputListener.touchedPos;
-                Entity obstacle = creator.createObstacle(touchedPoint.x, touchedPoint.y, 50, 50);
-                engine.addEntity(obstacle);
+                Entity entity = null;
+                if(sandbox.getCreatingType() == GameSector.TYPE_OBSTACLE) {
+                    entity = creator.createObstacle(touchedPoint.x, touchedPoint.y, 50, 50);
+                }else if(sandbox.getCreatingType() == GameSector.TYPE_COIN) {
+                    entity = creator.createCoin(touchedPoint.x, touchedPoint.y);
+                }
+
+                CPosition position = entity.getComponent(CPosition.class);
+                position.x = (Math.round(touchedPoint.x/50) * 50) + offsetX;
+                position.y = Math.round(touchedPoint.y/50) * 50;
+
+                engine.addEntity(entity);
+
                 System.out.println("Created Obstacle");
             }else if(!InputListener.touched) {
                 firstTouch=true;
@@ -58,20 +69,21 @@ public class InputModeSystem extends EntitySystem
                 Vector2 touchPos = new Vector2(InputListener.touchedPos);
                 for(Entity e : engine.getEntities())
                 {
-                    CCollider collider = e.getComponent(CCollider.class);
-                    if(collider!=null && collider.rect.contains(touchPos)) {
-                        draggedEntity = e;
-                        System.out.println("Selected Obj");
-                    }
-
+//                    CCollider collider = e.getComponent(CCollider.class);
+//                    Rectangle rect = new Rectangle(collider.rect);
+//                    rect.x -= rect.width/2f;
+//                    rect.y -= rect.height/2f;
+//                    if(collider!=null && rect.contains(touchPos)) {
+//                        draggedEntity = e;
+//                        System.out.println("Selected Obj");
+//                    }
                 }
             }else if(InputListener.dragged) {
-
+                float offsetX = 10;
                 if(draggedEntity!=null) {
-                    System.out.println("DRAG");
                     CPosition position = draggedEntity.getComponent(CPosition.class);
-                    position.x = InputListener.dragPos.x;
-                    position.y = InputListener.dragPos.y;
+                    position.x = (Math.round(InputListener.dragPos.x/50) * 50) + offsetX;
+                    position.y = Math.round(InputListener.dragPos.y/50) * 50;
                 }
             }
 

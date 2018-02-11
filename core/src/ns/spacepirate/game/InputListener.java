@@ -18,6 +18,7 @@ public class InputListener implements InputProcessor
     public static boolean dragged=false;
     public static Vector2 dragPos = new Vector2();
 
+//    public static
     //public static Vector2 touchV = new Vector2();
 
     OrthographicCamera cam;

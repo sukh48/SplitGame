@@ -12,35 +12,34 @@ import java.util.ArrayList;
 import ns.spacepirate.game.Assets;
 import ns.spacepirate.game.Brahma;
 import ns.spacepirate.game.InputListener;
-import ns.spacepirate.game.SpacePirate;
-import ns.spacepirate.game.components.CCollider;
+import ns.spacepirate.game.components.Collision.CCollider;
 import ns.spacepirate.game.components.CDivideBall;
-import ns.spacepirate.game.components.CExplode;
 import ns.spacepirate.game.components.CPosition;
 import ns.spacepirate.game.components.CTexture;
-import ns.spacepirate.game.components.CTweenEffect;
 import ns.spacepirate.game.components.CVelocity;
-import ns.spacepirate.game.controllers.PlayerCollisionHandler;
+import ns.spacepirate.game.components.Collision.CircleCollider;
 
 /**
  * Created by sukhmac on 2016-02-07.
  */
 public class DivideSystem extends IteratingSystem
 {
-    ComponentMapper<CDivideBall> divideBallMap;
-    ComponentMapper<CPosition> posMap;
-    ComponentMapper<CVelocity> velMap;
+    private static final int MAX_DIVIDES=1;
 
-    Engine engine;
-    Brahma creator;
+    private ComponentMapper<CDivideBall> divideBallMap;
+    private ComponentMapper<CPosition> posMap;
+    private ComponentMapper<CVelocity> velMap;
 
-    boolean firstTouch;
+    private Engine engine;
+    private Brahma creator;
 
-    int count=-1;
-    boolean start=false;
+    private int numDivides;
+    private boolean divided;
+    private boolean firstTouch;
+    private boolean closeEnough;
 
-    ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
-    ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
+    private ArrayList<Entity> entitiesToAdd = new ArrayList<Entity>();
+    private ArrayList<Entity> entitiesToRemove = new ArrayList<Entity>();
 
     public DivideSystem(Brahma creator)
     {
@@ -51,6 +50,10 @@ public class DivideSystem extends IteratingSystem
         velMap = ComponentMapper.getFor(CVelocity.class);
 
         firstTouch=true;
+
+        numDivides=0;
+        divided=false;
+        closeEnough=false;
     }
 
     @Override
@@ -61,12 +64,11 @@ public class DivideSystem extends IteratingSystem
     }
 
     @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
+    public void update(float deltaTime)
+    {
+        divided = false;
 
-        if (start) {
-            count += 1;
-        }
+        super.update(deltaTime);
 
         for(Entity e : entitiesToAdd) {
             engine.addEntity(e);
@@ -84,6 +86,10 @@ public class DivideSystem extends IteratingSystem
         }else if(!InputListener.touched) {
             firstTouch = true;
         }
+
+        if(divided) {
+            numDivides-=1;
+        }
     }
 
     @Override
@@ -92,16 +98,16 @@ public class DivideSystem extends IteratingSystem
         CDivideBall divideBall = divideBallMap.get(entity);
         CPosition entityPos = posMap.get(entity);
 
-        if(InputListener.touched && firstTouch && divideBall.state==CDivideBall.SINGLE)
+        if(((InputListener.touched && firstTouch) || closeEnough) && divideBall.state==CDivideBall.SINGLE && numDivides<MAX_DIVIDES)
         {
             CTexture cTexture = entity.getComponent(CTexture.class);
-            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
-            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+20, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity);
+            Entity ballLeft = creator.createBall(CDivideBall.DIR_LEFT, entityPos.x-7, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity, 10);
+            Entity ballRight = creator.createBall(CDivideBall.DIR_RIGHT, entityPos.x+7, entityPos.y, cTexture.sprite.getWidth()/1.5f, cTexture.sprite.getHeight()/1.5f, entity, 10);
 
             entitiesToAdd.add(ballLeft);
             entitiesToAdd.add(ballRight);
-//            engine.addEntity(ballLeft);
-//            engine.addEntity(ballRight);
+
+            closeEnough=false;
 
             System.out.println("Start: " + (entityPos.x - 20));
             divideBall.state=CDivideBall.DIVIDED;
@@ -109,7 +115,8 @@ public class DivideSystem extends IteratingSystem
             entity.remove(CTexture.class);
             entity.remove(CCollider.class);
 
-            start=true;
+            //divided = true;
+            numDivides+=1;
         }
 
         boolean destroy=false;
@@ -122,9 +129,16 @@ public class DivideSystem extends IteratingSystem
             }
             entityPos.y = parPos.y;
 
-            if(entityPos.x>=parPos.x-15 && entityPos.x<=parPos.x+15) {
+            if(entityPos.x>=parPos.x-25 && entityPos.x<=parPos.x+25 && InputListener.touched && firstTouch)
+            {
+                closeEnough = true;
+            }
+
+            if(entityPos.x>=parPos.x-5 && entityPos.x<=parPos.x+5) {
                 destroy = true;
                 parent.state=CDivideBall.SINGLE;
+
+                divided=true;
 
                 TextureRegion playerTex = Assets.inst.getSpriteTexture("Ball3");
                 CTexture graphicsComponent = new CTexture();
@@ -135,14 +149,13 @@ public class DivideSystem extends IteratingSystem
                 divideBall.parent.add(graphicsComponent);
 
                 CCollider colliderComponent = new CCollider();
-                colliderComponent.rect.setSize(playerTex.getRegionWidth() / 2f, playerTex.getRegionHeight() / 2f);
-                colliderComponent.setHandler(PlayerCollisionHandler.getInstance());
+                colliderComponent.setCollider(new CircleCollider(20));
                 divideBall.parent.add(colliderComponent);
             }
         }
 
 
-        boolean pressed = InputListener.touched;
+        boolean pressed = InputListener.touched && numDivides<=1;
 
         if(divideBall.applyForce && divideBall.state==CDivideBall.SINGLE)
         {
@@ -152,12 +165,11 @@ public class DivideSystem extends IteratingSystem
                 entityPos.x -= divideBall.speed;
             }
 
-            divideBall.speed += -divideBall.attSpeed + (pressed ? 1f : 0);
+            divideBall.speed += -divideBall.attSpeed + (pressed ? 0.7f : 0);
         }
 
         if(destroy)
         {
-            //engine.removeEntity(entity);
             entitiesToRemove.add(entity);
         }
     }

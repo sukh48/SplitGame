@@ -5,20 +5,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import ns.spacepirate.game.screens.GameScreen;
 
-public class SpacePirate extends Game {
+public class SpacePirate extends Game
+{
 
 	public static final int V_WIDTH=720;
 	public static final int V_HEIGHT=1280;
 
 	public SpriteBatch batcher;
 	public OrthographicCamera cam;
-	private FillViewport viewport;
+	public FillViewport viewport;
 
 	@Override
 	public void create ()
@@ -49,12 +48,7 @@ public class SpacePirate extends Game {
 
 	private void start()
 	{
-//		GestureDetector gd = new GestureDetector(new InputListener(cam));
-
-		Gdx.input.setInputProcessor(new InputListener(cam));
 		setScreen(new GameScreen(this));
-
-		Gdx.app.debug("HELLO", "HEKALJ EKJ ");
 	}
 
 	@Override
@@ -66,9 +60,10 @@ public class SpacePirate extends Game {
 	}
 
 	@Override
-	public void render() {
+	public void render()
+	{
 		GL20 gl = Gdx.gl;
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		gl.glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		super.render();
